@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Perfume store</title>
-    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="{{ asset('css/style/styles.css') }}">
+
 </head>
 <body>
     <nav class="nav-bar">
@@ -114,10 +115,10 @@
                 <br>
                 Saturday: 10.00 - 19.00</p>
                 <div id="social-logos">
-                    <img src="logos/facebook.png" alt="">
-                    <img src="logos/instagram.png" alt="">
-                    <img src="logos/twitter.png" alt="">
-                    <img src="logos/pinterest.png" alt="">
+                    <img src="{{ asset('logos') }}/facebook.png" alt="">
+                    <img src="{{ asset('logos') }}/instagram.png" alt="">
+                    <img src="{{ asset('logos') }}/twitter.png" alt="">
+                    <img src="{{ asset('logos') }}/pinterest.png" alt="">
                 </div>
         </div>
         <div>
