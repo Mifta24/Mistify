@@ -20,25 +20,19 @@ class FrontController extends Controller
 
     public function products()
     {
-        return view('front.products');
+        $products = Product::paginate(12); // Menampilkan 12 produk per halaman
+        return view('front.products',compact('products'));
     }
 
 
 
-    public function product(Product $product)
+    public function product($slug)
     {
-        return view('front.product');
+        $product = Product::where('slug', $slug)->firstOrFail();
+        return view('front.product',compact('product'));
     }
 
-    public function cart()
-    {
-        return view('front.cart');
-    }
-
-    public function checkout()
-    {
-        return view('front.checkout');
-    }
+   
 
 
 
