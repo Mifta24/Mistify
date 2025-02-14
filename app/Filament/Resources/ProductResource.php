@@ -19,6 +19,8 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?int $navigationSort = 3;
+
     public static function form(Form $form): Form
     {
         return $form
@@ -31,13 +33,16 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('price')
                     ->required()
                     ->numeric()
-                    ->prefix('$'),
+                    ->prefix('Rp'),
                 Forms\Components\TextInput::make('stock')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('category_id')
+                Forms\Components\Select::make('category_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('category', 'name')
+                    ->placeholder('Select a category')
+                    ->label('Category'),
+
             ]);
     }
 
@@ -53,8 +58,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('category.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

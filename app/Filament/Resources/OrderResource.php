@@ -23,9 +23,10 @@ class OrderResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('user_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('user', 'name')
+                    ->label('Username'),
                 Forms\Components\TextInput::make('total_price')
                     ->required()
                     ->numeric(),
@@ -40,7 +41,7 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('user.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_price')
