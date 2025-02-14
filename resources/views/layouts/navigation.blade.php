@@ -13,13 +13,13 @@
                     <a class="nav-link" href="{{ route('dashboard') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Products</a>
+                    <a class="nav-link" href="{{ route('products.index') } }}">Products</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
+                    <a class="nav-link" href="{{ route('services') }}">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
+                    <a class="nav-link" href="{{ route('contact') }}">Contact Us</a>
                 </li>
             </ul>
 
@@ -39,9 +39,15 @@
                         </li>
                     </ul>
                 </div>
+                
+                <a href="#" class="btn btn-primary ms-3">Order Now</a>
             @endauth
 
-            <a href="#" class="btn btn-primary ms-3">Order Now</a>
+            @guest
+                <a class="btn btn-outline-secondary" href="{{ route('login') }}">Login</a>
+                <a class="btn btn-outline-secondary" href="{{ route('register') }}">Register</a>
+            @endguest
+
         </div>
     </div>
 </nav>
