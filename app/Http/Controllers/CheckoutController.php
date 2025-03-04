@@ -14,7 +14,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart.index')->with('error', 'Keranjang kosong!');
         }
 
-        return view('checkout.index');
+        return view('front.checkout.index');
     }
 
     public function process(Request $request)
