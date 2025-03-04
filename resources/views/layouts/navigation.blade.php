@@ -10,16 +10,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('dashboard') }}">Home</a>
+                    {{-- <a class="nav-link" href="{{ route('dashboard') }}">Home</a> --}}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('products.index') } }}">Products</a>
+                    {{-- <a class="nav-link" href="{{ route('products.index') }}">Products</a> --}}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('services') }}">Services</a>
+                    {{-- <a class="nav-link" href="{{ route('services') }}">Services</a> --}}
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('contact') }}">Contact Us</a>
+                    {{-- <a class="nav-link" href="{{ route('contact') }}">Contact Us</a> --}}
                 </li>
             </ul>
 
