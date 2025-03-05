@@ -43,10 +43,10 @@
                         Saturday: 10.00 - 19.00
                     </p>
                     <div id="social-logos">
-                        <img src="{{ asset('logos') }}/facebook.png" alt="">
-                        <img src="{{ asset('logos') }}/instagram.png" alt="">
-                        <img src="{{ asset('logos') }}/twitter.png" alt="">
-                        <img src="{{ asset('logos') }}/pinterest.png" alt="">
+                        <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" loading="lazy">
+                        <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" loading="lazy">
+                        <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" loading="lazy">
+                        <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" loading="lazy">
                     </div>
                 </div>
                 <div>

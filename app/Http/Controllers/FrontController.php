@@ -13,6 +13,16 @@ class FrontController extends Controller
         return view('index');
     }
 
+    public function about()
+    {
+        return view('front.about');
+    }
+
+    public function services()
+    {
+        return view('front.services');
+    }
+
     public function contact()
     {
         return view('front.contact');
@@ -25,14 +35,13 @@ class FrontController extends Controller
     }
 
 
-
-    public function product($slug)
+    public function showProduct($slug)
     {
         $product = Product::where('slug', $slug)->firstOrFail();
         return view('front.product',compact('product'));
     }
 
-   
+
 
 
 

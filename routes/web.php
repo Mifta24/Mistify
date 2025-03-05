@@ -22,6 +22,9 @@ Route::get('/contact', [FrontController::class, 'contact'])->name('contact');
 // About
 Route::get('/about', [FrontController::class, 'about'])->name('about');
 
+// Services
+Route::get('/services', [FrontController::class, 'services'])->name('services');
+
 // Profile
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -30,8 +33,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // Front Products
-Route::get('/products', [FrontController::class, 'index'])->name('products.index');
-Route::get('/products/{slug}', [FrontController::class, 'show'])->name('products.show');
+Route::get('/products', [FrontController::class, 'products'])->name('products.index');
+Route::get('/products/{slug}', [FrontController::class, 'showProduct'])->name('products.show');
 
 // Cart
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
