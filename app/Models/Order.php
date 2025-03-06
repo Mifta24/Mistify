@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
@@ -10,24 +11,36 @@ class Order extends Model
         'user_id',
         'order_number',
         'total_price',
+        'shipping_fee',
         'status',
+        'payment_status',
         'shipping_name',
         'shipping_phone',
         'shipping_address',
         'shipping_city',
         'shipping_postal_code',
-        'notes'
+        'notes',
+        'payment_method'
     ];
 
     protected $casts = [
-        'total_price' => 'decimal:2'
+        'total_price' => 'decimal:2',
+        'shipping_fee' => 'decimal:2',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     // Status Constants
     const STATUS_PENDING = 'pending';
     const STATUS_PROCESSING = 'processing';
-    const STATUS_COMPLETED = 'completed';
+    const STATUS_SHIPPED = 'shipped';
+    const STATUS_DELIVERED = 'delivered';
     const STATUS_CANCELLED = 'cancelled';
+
+    // Payment Status Constants
+    const PAYMENT_UNPAID = 'unpaid';
+    const PAYMENT_PAID = 'paid';
+    const PAYMENT_REFUNDED = 'refunded';
 
     // Relationships
     public function user()
@@ -35,15 +48,35 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function products()
+    public function items(): HasMany
     {
-        return $this->belongsToMany(Product::class, 'order_items')
-            ->withPivot('quantity', 'price', 'subtotal');
+        return $this->hasMany(OrderItem::class);
     }
 
-    public function payment()
+    // Accessors
+    public function getStatusColorAttribute(): string
     {
-        return $this->hasOne(Payment::class);
+        return [
+            self::STATUS_PENDING => 'warning',
+            self::STATUS_PROCESSING => 'info',
+            self::STATUS_SHIPPED => 'primary',
+            self::STATUS_DELIVERED => 'success',
+            self::STATUS_CANCELLED => 'danger',
+        ][$this->status] ?? 'secondary';
+    }
+
+    public function getPaymentStatusColorAttribute(): string
+    {
+        return [
+            self::PAYMENT_UNPAID => 'danger',
+            self::PAYMENT_PAID => 'success',
+            self::PAYMENT_REFUNDED => 'warning',
+        ][$this->payment_status] ?? 'secondary';
+    }
+
+    public function getSubtotalAttribute(): float
+    {
+        return $this->total_price - $this->shipping_fee;
     }
 
     // Scopes
@@ -57,9 +90,14 @@ class Order extends Model
         return $query->where('status', self::STATUS_PROCESSING);
     }
 
-    public function scopeCompleted($query)
+    public function scopeShipped($query)
     {
-        return $query->where('status', self::STATUS_COMPLETED);
+        return $query->where('status', self::STATUS_SHIPPED);
+    }
+
+    public function scopeDelivered($query)
+    {
+        return $query->where('status', self::STATUS_DELIVERED);
     }
 
     public function scopeCancelled($query)
@@ -67,29 +105,29 @@ class Order extends Model
         return $query->where('status', self::STATUS_CANCELLED);
     }
 
+    public function scopeUnpaid($query)
+    {
+        return $query->where('payment_status', self::PAYMENT_UNPAID);
+    }
+
+    public function scopePaid($query)
+    {
+        return $query->where('payment_status', self::PAYMENT_PAID);
+    }
+
     // Helper Methods
-    public function updateStatus($status)
+    public function updateStatus(string $status): bool
     {
-        $this->update(['status' => $status]);
+        return $this->update(['status' => $status]);
     }
 
-    public function isPending()
+    public function updatePaymentStatus(string $status): bool
     {
-        return $this->status === self::STATUS_PENDING;
+        return $this->update(['payment_status' => $status]);
     }
 
-    public function isProcessing()
+    public function canBeCancelled(): bool
     {
-        return $this->status === self::STATUS_PROCESSING;
-    }
-
-    public function isCompleted()
-    {
-        return $this->status === self::STATUS_COMPLETED;
-    }
-
-    public function isCancelled()
-    {
-        return $this->status === self::STATUS_CANCELLED;
+        return in_array($this->status, [self::STATUS_PENDING, self::STATUS_PROCESSING]);
     }
 }
