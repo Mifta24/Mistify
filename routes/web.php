@@ -37,22 +37,29 @@ Route::get('/products', [FrontController::class, 'products'])->name('products.in
 Route::get('/products/{slug}', [FrontController::class, 'showProduct'])->name('products.show');
 
 // Cart
-Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
-Route::post('/cart/add/{id}', [CartController::class, 'store'])->name('cart.store');
-Route::patch('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-Route::delete('/cart/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+Route::prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/add/{id}', [CartController::class, 'store'])->name('cart.store');
+    Route::patch('/update/{id}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/remove/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
+});
 
 // Checkout
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index')->middleware('auth');
-Route::post('/checkout', [CheckoutController::class, 'process'])->name('checkout.process')->middleware('auth');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
+});
 
 // Payment
 Route::get('/payment/{order}', [PaymentController::class, 'index'])->name('payment.index')->middleware('auth');
 Route::post('/payment/process', [PaymentController::class, 'process'])->name('payment.process')->middleware('auth');
 
-// Riwayat Order
-Route::get('/orders', [OrderController::class, 'index'])->name('orders.index')->middleware('auth');
-Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show')->middleware('auth');
+//  Order
+Route::middleware(['auth'])->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+    Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
+});
 
 require __DIR__ . '/auth.php';
