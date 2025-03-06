@@ -25,8 +25,8 @@
 
             @auth
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="profileDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         {{ Auth::user()->name }}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
@@ -41,11 +41,22 @@
                 </div>
 
                 <a href="#" class="btn btn-primary ms-3">Order Now</a>
+
+                <a href="{{ route('cart.index') }}" class="nav-link position-relative">
+                    <i class="bi bi-cart3"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        id="cartCount">
+                        {{ count(session('cart', [])) }}
+                    </span>
+                </a>
             @endauth
 
             @guest
                 <a class="btn btn-outline-secondary" href="{{ route('login') }}">Login</a>
                 <a class="btn btn-outline-secondary" href="{{ route('register') }}">Register</a>
+
+
+
             @endguest
 
         </div>
