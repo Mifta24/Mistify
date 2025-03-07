@@ -14,9 +14,20 @@ use Illuminate\Database\Eloquent\Builder;
 class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-cart';
+    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
     protected static ?string $navigationGroup = 'Transaction Management';
     protected static ?int $navigationSort = 5;
+    protected static ?string $recordTitleAttribute = 'order_number';
+
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('status', Order::STATUS_PENDING)->count();
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
 
     public static function form(Form $form): Form
     {
@@ -44,15 +55,32 @@ class OrderResource extends Resource
                                     ->prefix('Rp')
                                     ->disabled(),
 
+                                Forms\Components\TextInput::make('shipping_fee')
+                                    ->required()
+                                    ->numeric()
+                                    ->prefix('Rp'),
+
                                 Forms\Components\Select::make('status')
                                     ->options([
                                         Order::STATUS_PENDING => 'Pending',
                                         Order::STATUS_PROCESSING => 'Processing',
-                                        Order::STATUS_COMPLETED => 'Completed',
+                                        Order::STATUS_SHIPPED => 'Shipped',
+                                        Order::STATUS_DELIVERED => 'Delivered',
                                         Order::STATUS_CANCELLED => 'Cancelled',
                                     ])
                                     ->required()
-                                    ->default(Order::STATUS_PENDING),
+                                    ->default(Order::STATUS_PENDING)
+                                    ->native(false),
+
+                                Forms\Components\Select::make('payment_status')
+                                    ->options([
+                                        Order::PAYMENT_UNPAID => 'Unpaid',
+                                        Order::PAYMENT_PAID => 'Paid',
+                                        Order::PAYMENT_REFUNDED => 'Refunded',
+                                    ])
+                                    ->required()
+                                    ->default(Order::PAYMENT_UNPAID)
+                                    ->native(false),
                             ])
                             ->columns(2),
 
@@ -65,7 +93,7 @@ class OrderResource extends Resource
                                 Forms\Components\TextInput::make('shipping_phone')
                                     ->required()
                                     ->tel()
-                                    ->maxLength(255),
+                                    ->maxLength(20),
 
                                 Forms\Components\Textarea::make('shipping_address')
                                     ->required()
@@ -73,29 +101,59 @@ class OrderResource extends Resource
 
                                 Forms\Components\TextInput::make('shipping_city')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(100),
 
                                 Forms\Components\TextInput::make('shipping_postal_code')
                                     ->required()
-                                    ->maxLength(255),
+                                    ->maxLength(10),
                             ])
                             ->columns(2),
+
+                        Forms\Components\Section::make('Order Items')
+                            ->schema([
+                                Forms\Components\Repeater::make('items')
+                                    ->relationship()
+                                    ->schema([
+                                        Forms\Components\Select::make('product_id')
+                                            ->relationship('product', 'name')
+                                            ->required()
+                                            ->searchable()
+                                            ->preload(),
+                                        Forms\Components\TextInput::make('quantity')
+                                            ->required()
+                                            ->numeric()
+                                            ->minValue(1),
+                                        Forms\Components\TextInput::make('price')
+                                            ->required()
+                                            ->numeric()
+                                            ->prefix('Rp'),
+                                    ])
+                                    ->columns(3)
+                            ])
                     ])
                     ->columnSpan(['lg' => 2]),
 
                 Forms\Components\Group::make()
                     ->schema([
+                        Forms\Components\Section::make('Order Summary')
+                            ->schema([
+                                Forms\Components\Placeholder::make('created_at')
+                                    ->label('Order Date')
+                                    ->content(fn ($record): string => $record?->created_at?->format('d M Y H:i') ?? '-'),
+
+                                Forms\Components\Placeholder::make('updated_at')
+                                    ->label('Last Updated')
+                                    ->content(fn ($record): string => $record?->updated_at?->format('d M Y H:i') ?? '-'),
+
+                                Forms\Components\Placeholder::make('payment_method')
+                                    ->content(fn ($record): string => strtoupper($record?->payment_method ?? '-')),
+                            ]),
+
                         Forms\Components\Section::make('Notes')
                             ->schema([
                                 Forms\Components\Textarea::make('notes')
                                     ->maxLength(65535)
                                     ->columnSpanFull(),
-                            ]),
-
-                            Forms\Components\Section::make('Payment Status')
-                            ->schema([
-                                Forms\Components\Placeholder::make('payment_status')
-                                    ->content(fn ($record) => $record?->payment?->status ?? 'No Payment')
                             ]),
                     ])
                     ->columnSpan(['lg' => 1]),
@@ -109,7 +167,10 @@ class OrderResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('order_number')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->copyable()
+                    ->copyMessage('Order number copied')
+                    ->copyMessageDuration(1500),
 
                 Tables\Columns\TextColumn::make('user.name')
                     ->searchable()
@@ -124,14 +185,24 @@ class OrderResource extends Resource
                     ->color(fn (string $state): string => match ($state) {
                         Order::STATUS_PENDING => 'warning',
                         Order::STATUS_PROCESSING => 'info',
-                        Order::STATUS_COMPLETED => 'success',
+                        Order::STATUS_SHIPPED => 'primary',
+                        Order::STATUS_DELIVERED => 'success',
                         Order::STATUS_CANCELLED => 'danger',
+                        default => 'gray',
+                    }),
+
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        Order::PAYMENT_UNPAID => 'danger',
+                        Order::PAYMENT_PAID => 'success',
+                        Order::PAYMENT_REFUNDED => 'warning',
                         default => 'gray',
                     }),
 
                 Tables\Columns\TextColumn::make('shipping_name')
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 Tables\Columns\TextColumn::make('shipping_city')
                     ->searchable()
@@ -147,13 +218,24 @@ class OrderResource extends Resource
                     ->options([
                         Order::STATUS_PENDING => 'Pending',
                         Order::STATUS_PROCESSING => 'Processing',
-                        Order::STATUS_COMPLETED => 'Completed',
+                        Order::STATUS_SHIPPED => 'Shipped',
+                        Order::STATUS_DELIVERED => 'Delivered',
                         Order::STATUS_CANCELLED => 'Cancelled',
+                    ]),
+                Tables\Filters\SelectFilter::make('payment_status')
+                    ->options([
+                        Order::PAYMENT_UNPAID => 'Unpaid',
+                        Order::PAYMENT_PAID => 'Paid',
+                        Order::PAYMENT_REFUNDED => 'Refunded',
                     ]),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('print')
+                    ->icon('heroicon-o-printer')
+                    ->url(fn (Order $record): string => route('orders.print', $record))
+                    ->openUrlInNewTab(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -177,10 +259,5 @@ class OrderResource extends Resource
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
-    }
-
-    public static function getNavigationBadge(): ?string
-    {
-        return static::getModel()::count();
     }
 }

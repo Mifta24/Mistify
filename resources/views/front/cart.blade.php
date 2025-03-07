@@ -79,7 +79,7 @@
                                 <strong>Total</strong>
                                 <strong>Rp {{ number_format($total, 0, ',', '.') }}</strong>
                             </div>
-                            <a href="{{ route('checkout ') }}"
+                            <a href="{{ route('checkout.index') }}"
                                class="btn btn-primary w-100 mb-3">
                                 Proceed to Checkout
                             </a>
