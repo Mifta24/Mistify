@@ -74,13 +74,14 @@ Route::middleware(['auth'])->group(function () {
         });
 
     // Payment Process
-    Route::controller(PaymentController::class)
-        ->prefix('payment')
-        ->name('payment.')
-        ->group(function () {
-            Route::get('/{order}', 'index')->name('index');
-            Route::post('/process', 'process')->name('process');
+    Route::middleware(['auth'])->group(function () {
+        // Payment Routes
+        Route::controller(PaymentController::class)->group(function () {
+            Route::get('/payment/{order}', 'index')->name('payment.index');
+            Route::post('/payment/{order}/process', 'process')->name('payment.process');
+            Route::get('/payment/{order}/instructions', 'instructions')->name('payment.instructions');
         });
+    });
 
     // Order Management
     Route::controller(OrderController::class)
@@ -91,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{order}', 'show')->name('show');
             Route::post('/{order}/cancel', 'cancel')->name('cancel');
             Route::get('/{order}/track', 'track')->name('track');
+            Route::get('/{order}/print', 'print')->name('print')->middleware('admin');
         });
 });
 

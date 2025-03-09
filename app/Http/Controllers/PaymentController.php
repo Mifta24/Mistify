@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
@@ -49,7 +50,7 @@ class PaymentController extends Controller
                 'payment_method' => $request->payment_method
             ]);
 
-            // For bank transfer, show payment instructions
+            // Handle payment methods
             if ($request->payment_method === 'bank_transfer') {
                 $bankDetails = [
                     'bank_name' => 'Bank Central Asia (BCA)',
@@ -60,12 +61,11 @@ class PaymentController extends Controller
 
                 DB::commit();
 
-                return view('front.payment.instructions', compact('order', 'bankDetails'));
+                return redirect()->route('payment.instructions', $order)
+                    ->with('bankDetails', $bankDetails);
             }
 
-            // For e-wallet, redirect to payment gateway (implement your payment gateway here)
             if ($request->payment_method === 'e_wallet') {
-                // Initialize payment gateway
                 $paymentUrl = $this->initializePaymentGateway($order);
 
                 DB::commit();
@@ -73,14 +73,37 @@ class PaymentController extends Controller
                 return redirect()->away($paymentUrl);
             }
 
+            throw new \Exception('Invalid payment method.');
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Payment Error: ' . $e->getMessage());
 
             return redirect()->back()
                 ->with('error', $e->getMessage())
                 ->withInput();
         }
     }
+
+    public function instructions(Order $order)
+    {
+        if ($order->user_id !== auth()->id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($order->payment_method !== 'bank_transfer') {
+            return redirect()->route('payment.index', $order);
+        }
+
+        $bankDetails = session('bankDetails') ?? [
+            'bank_name' => 'Bank Central Asia (BCA)',
+            'account_number' => '1234567890',
+            'account_name' => 'PT Mistify Indonesia',
+            'amount' => $order->total_price,
+        ];
+
+        return view('front.payment.instructions', compact('order', 'bankDetails'));
+    }
+
 
     public function callback(Request $request)
     {
@@ -106,7 +129,6 @@ class PaymentController extends Controller
             DB::commit();
 
             return response()->json(['status' => 'success']);
-
         } catch (\Exception $e) {
             DB::rollBack();
 

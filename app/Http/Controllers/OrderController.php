@@ -51,4 +51,14 @@ class OrderController extends Controller
 
         return view('front.orders.track', compact('order'));
     }
+
+    public function print(Order $order)
+{
+    // Allow both admin and order owner to print
+    if ($order->user_id !== auth()->id() && !auth()->user()->is_admin) {
+        abort(403);
+    }
+
+    return view('front.orders.print', compact('order'));
+}
 }

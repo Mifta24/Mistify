@@ -47,6 +47,9 @@ class User extends Authenticatable
         ];
     }
 
-
-
+    public function getIsAdminAttribute(): bool
+    {
+        // Adjust this based on your admin role implementation
+        return $this->role === 'admin' || $this->hasRole('admin');
+    }
 }

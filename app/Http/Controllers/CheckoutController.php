@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CheckoutController extends Controller
 {
@@ -47,10 +49,20 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
+            // Validate products and stock
+            foreach ($cart as $id => $item) {
+                $product = Product::findOrFail($id);
+
+                if ($product->stock < $item['quantity']) {
+                    throw new \Exception("Insufficient stock for {$product->name}");
+                }
+            }
+
             // Calculate totals
             $subtotal = $this->calculateSubtotal($cart);
             $shipping = 10000;
             $total = $subtotal + $shipping;
+
 
             // Create order
             $order = Order::create([
@@ -69,27 +81,34 @@ class CheckoutController extends Controller
                 'payment_method' => $request->input('payment_method')
             ]);
 
-            // Create order items
+            // Create order items and update stock
             foreach ($cart as $id => $item) {
+                $product = Product::findOrFail($id);
+
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $id,
+                    'product_name' => $product->name,
                     'quantity' => $item['quantity'],
-                    'price' => $item['price']
+                    'price' => $item['price'],
+                    'subtotal' => $item['price'] * $item['quantity']
                 ]);
+
+                // Decrease product stock
+                $product->decrement('stock', $item['quantity']);
             }
 
             DB::commit();
             session()->forget('cart');
 
-            return redirect()->route('orders.show', $order)
+            return redirect()->route('payment.index', $order)
                 ->with('success', 'Order placed successfully!');
-
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Checkout Error: ' . $e->getMessage());
 
             return redirect()->back()
-                ->with('error', 'Failed to process your order. Please try again.')
+                ->with('error', $e->getMessage())
                 ->withInput();
         }
     }

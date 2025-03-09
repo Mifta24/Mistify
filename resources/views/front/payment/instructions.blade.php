@@ -18,7 +18,7 @@
                             Please complete your payment within 24 hours
                         </div>
 
-                        <a href="{{ route('orders.show', $order) }}" class="btn btn-primary">
+                        <a href="{{ route('orders.show', $order->order_number) }}" class="btn btn-primary">
                             View Order Details
                         </a>
                     </div>

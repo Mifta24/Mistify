@@ -91,7 +91,7 @@
                                         </span>
                                     </div>
                                     <div class="col-auto">
-                                        <a href="{{ route('orders.show', $order) }}"
+                                        <a href="{{ route('orders.show', $order->order_number) }}"
                                            class="btn btn-outline-primary btn-sm">
                                             View Details
                                         </a>
