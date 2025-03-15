@@ -29,22 +29,22 @@
         <h1 class="large-text">Our Services</h1>
         <div class="container-3-services">
             <div>
-                <img src="logos/recommendation.png" alt="">
+                <img src="logos/recommendation.png" alt="" loading="lazy">
                 <h2>Recommendations</h2>
                 <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo obcaecati distinctio temporibus suscipit illum placeat alias error voluptas.</p>
             </div>
             <div>
-                <img src="logos/giftbox.png" alt="">
+                <img src="logos/giftbox.png" alt="" loading="lazy">
                 <h2>Gifting</h2>
                 <p>Quo obcaecati distinctio temporibus suscipit illum placeat alias error voluptas.</p>
             </div>
             <div>
-                <img src="logos/perfume-spray.png" alt="">
+                <img src="logos/perfume-spray.png" alt="" loading="lazy">
                 <h2>Refills</h2>
                 <p>Suspendisse mauris nulla, elementum a consectetur sit amet, dapibus eget mauris.</p>
             </div>
             <div>
-                <img src="logos/refund.png" alt="">
+                <img src="logos/refund.png" alt="" loading="lazy">
                 <h2>Returns</h2>
                 <p>Ut vel felis at mi semper mollis.</p>
             </div>
@@ -64,12 +64,12 @@
         </div>
 
         <div class="container-4-collection">
-        <img src="images/perfume-image1.jpg" alt="">
-       <img src="images/perfume-image2.jpg" alt="">
-       <img src="images/perfume-image3.jpg" alt="">
-       <img src="images/perfume-image4.jpg" alt="">
-       <img src="images/perfume-image5.jpg" alt="">
-        <img src="images/perfume-image6.jpg" alt="">
+        <img src="images/perfume-image1.jpg" alt="" loading="lazy">
+       <img src="images/perfume-image2.jpg" alt="" loading="lazy">
+       <img src="images/perfume-image3.jpg" alt="" loading="lazy">
+       <img src="images/perfume-image4.jpg" alt="" loading="lazy">
+       <img src="images/perfume-image5.jpg" alt="" loading="lazy">
+        <img src="images/perfume-image6.jpg" alt="" loading="lazy">
     </div>
 </div>
 

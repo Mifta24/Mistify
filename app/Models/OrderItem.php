@@ -6,8 +6,22 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderItem extends Model
 {
-    protected $fillable = ['order_id', 'product_id', 'quantity', 'price'];
+    protected $fillable = [
+        'order_id',
+        'product_id',
+        'product_name',
+        'price',
+        'quantity',
+        'subtotal'
+    ];
 
+    protected $casts = [
+        'price' => 'decimal:2',
+        'subtotal' => 'decimal:2',
+        'quantity' => 'integer'
+    ];
+
+    // Relationships
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -16,5 +30,30 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    // Helper Methods
+    public function calculateSubtotal()
+    {
+        $this->subtotal = $this->price * $this->quantity;
+        return $this->subtotal;
+    }
+
+    // Boot Method
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($orderItem) {
+            if (empty($orderItem->subtotal)) {
+                $orderItem->calculateSubtotal();
+            }
+        });
+
+        static::updating(function ($orderItem) {
+            if ($orderItem->isDirty(['price', 'quantity'])) {
+                $orderItem->calculateSubtotal();
+            }
+        });
     }
 }

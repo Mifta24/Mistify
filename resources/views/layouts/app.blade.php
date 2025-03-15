@@ -15,9 +15,15 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Add in head section -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body class="font-sans antialiased">
@@ -43,10 +49,10 @@
                         Saturday: 10.00 - 19.00
                     </p>
                     <div id="social-logos">
-                        <img src="{{ asset('logos') }}/facebook.png" alt="">
-                        <img src="{{ asset('logos') }}/instagram.png" alt="">
-                        <img src="{{ asset('logos') }}/twitter.png" alt="">
-                        <img src="{{ asset('logos') }}/pinterest.png" alt="">
+                        <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" loading="lazy">
+                        <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" loading="lazy">
+                        <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" loading="lazy">
+                        <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" loading="lazy">
                     </div>
                 </div>
                 <div>
@@ -63,6 +69,10 @@
     </div>
 
 
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    @stack('scripts')
 </body>
 
 </html>
