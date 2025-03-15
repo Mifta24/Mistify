@@ -101,7 +101,7 @@ class CheckoutController extends Controller
             DB::commit();
             session()->forget('cart');
 
-            return redirect()->route('payment.index', $order)
+            return redirect()->route('payment.index', $order->order_number)
                 ->with('success', 'Order placed successfully!');
         } catch (\Exception $e) {
             DB::rollBack();

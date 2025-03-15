@@ -1,12 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CartController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\MidtransController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,15 +74,20 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/process', 'process')->name('process');
         });
 
+
     // Payment Process
-    Route::middleware(['auth'])->group(function () {
-        // Payment Routes
-        Route::controller(PaymentController::class)->group(function () {
-            Route::get('/payment/{order}', 'index')->name('payment.index');
-            Route::post('/payment/{order}/process', 'process')->name('payment.process');
-            Route::get('/payment/{order}/instructions', 'instructions')->name('payment.instructions');
-        });
+    Route::controller(PaymentController::class)
+    ->prefix('payment')
+    ->name('payment.')
+    ->group(function () {
+        Route::get('/{order:order_number}', 'index')->name('index');
+        Route::post('/{order:order_number}/process', 'process')->name('process');
+        Route::get('/{order:order_number}/instructions', 'instructions')->name('instructions');
+        Route::get('/{order:order_number}/finish', 'handleFinish')->name('finish');
+        Route::get('/{order:order_number}/error', 'handleError')->name('error');
+        Route::get('/{order:order_number}/cancel', 'handleCancel')->name('cancel');
     });
+
 
     // Order Management
     Route::controller(OrderController::class)
@@ -94,7 +100,30 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{order}/track', 'track')->name('track');
             Route::get('/{order}/print', 'print')->name('print')->middleware('admin');
         });
+
+
+    // Midtrans Routes
+    Route::controller(MidtransController::class)
+        ->prefix('midtrans')
+        ->name('midtrans.')
+        ->group(function () {
+            Route::get('/transaction/{order}', 'createTransaction')->name('create-transaction');
+        });
 });
+
+// Routes that don't need auth
+// Route::post('/payment/callback', [PaymentController::class, 'callback'])
+//     ->name('payment.callback');
+
+// Route::post('/midtrans/notification', [MidtransController::class, 'handleNotification'])
+//     ->name('midtrans.notification');
+
+// Webhook Routes (No auth, No CSRF)
+// Route::prefix('webhook')->name('webhook.')->group(function () {
+//     Route::post('/midtrans', [PaymentController::class, 'callback'])
+//         ->name('midtrans')
+//         ->withoutMiddleware(['verify_csrf_token']);
+// })->middleware('api');
 
 /*
 |--------------------------------------------------------------------------

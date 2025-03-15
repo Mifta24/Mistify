@@ -26,7 +26,9 @@ class Order extends Model
         'payment_method',
         'processed_at',
         'shipped_at',
-        'delivered_at'
+        'delivered_at',
+        'paid_at',
+        'payment_details',
     ];
 
     protected $casts = [
@@ -36,7 +38,9 @@ class Order extends Model
         'updated_at' => 'datetime',
         'processed_at' => 'datetime',
         'shipped_at' => 'datetime',
-        'delivered_at' => 'datetime'
+        'delivered_at' => 'datetime',
+        'paid_at' => 'datetime',
+        'payment_details' => 'array',
     ];
 
     // Status Constants

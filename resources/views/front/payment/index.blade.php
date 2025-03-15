@@ -1,58 +1,10 @@
 <x-app-layout>
+    <!-- ...existing header and progress steps... -->
+
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <!-- Progress Steps -->
-                <div class="mb-5">
-                    <div class="position-relative m-4">
-                        <div class="progress" style="height: 3px;">
-                            <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
-                        </div>
-                        <div class="position-absolute top-0 start-0 translate-middle">
-                            <button class="btn btn-success btn-sm rounded-pill px-3" disabled>1. Shipping</button>
-                        </div>
-                        <div class="position-absolute top-0 start-50 translate-middle">
-                            <button class="btn btn-success btn-sm rounded-pill px-3" disabled>2. Payment</button>
-                        </div>
-                        <div class="position-absolute top-0 start-100 translate-middle">
-                            <button class="btn btn-primary btn-sm rounded-pill px-3" disabled>3. Confirmation</button>
-                        </div>
-                    </div>
-                </div>
-
-                @if(session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
-                <!-- Order Summary Card -->
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Order #{{ $order->order_number }}</h5>
-                            <span class="badge bg-{{ $order->payment_status_color }}">
-                                {{ ucfirst($order->payment_status) }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Subtotal</span>
-                            <span>Rp {{ number_format($order->subtotal, 0, ',', '.') }}</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-3">
-                            <span class="text-muted">Shipping</span>
-                            <span>Rp {{ number_format($order->shipping_fee, 0, ',', '.') }}</span>
-                        </div>
-                        <hr>
-                        <div class="d-flex justify-content-between mb-0">
-                            <strong>Total</strong>
-                            <strong class="text-primary">Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong>
-                        </div>
-                    </div>
-                </div>
+                <!-- ...existing alerts and order summary... -->
 
                 <!-- Payment Methods -->
                 <div class="card shadow-sm border-0">
@@ -60,34 +12,37 @@
                         <h5 class="card-title mb-0">Select Payment Method</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('payment.process', $order) }}" method="POST" id="paymentForm">
+                        <form action="{{ route('payment.process', $order->order_number) }}" method="POST" id="paymentForm">
                             @csrf
                             <div class="list-group mb-4">
+                                <!-- Bank Transfer Option -->
                                 <label class="list-group-item d-flex gap-3">
                                     <input class="form-check-input" type="radio" name="payment_method"
                                            value="bank_transfer" required checked>
                                     <span>
                                         <i class="bi bi-bank me-2"></i>
-                                        Bank Transfer
+                                        Manual Bank Transfer
                                         <small class="d-block text-muted">
-                                            Transfer to our bank account
+                                            Transfer manually to our bank account
                                         </small>
                                     </span>
                                 </label>
 
+                                <!-- E-Wallet & Virtual Account Option -->
                                 <label class="list-group-item d-flex gap-3">
                                     <input class="form-check-input" type="radio" name="payment_method"
                                            value="e_wallet" required>
                                     <span>
                                         <i class="bi bi-wallet2 me-2"></i>
-                                        E-Wallet
+                                        E-Wallet & Virtual Account
                                         <small class="d-block text-muted">
-                                            Pay with your e-wallet
+                                            GoPay, ShopeePay, QRIS, Virtual Account (BCA, BNI, BRI, Mandiri)
                                         </small>
                                     </span>
                                 </label>
                             </div>
 
+                            <!-- Manual Bank Transfer Details -->
                             <div id="bankDetails" class="card bg-light border-0 mb-4">
                                 <div class="card-body">
                                     <h6 class="card-title mb-3">Bank Account Details</h6>
@@ -98,11 +53,17 @@
                                         </div>
                                         <div class="col-md-6">
                                             <p class="mb-1"><strong>Account Number</strong></p>
-                                            <p class="mb-0">1234567890</p>
+                                            <p class="mb-0 font-monospace">1234567890</p>
                                         </div>
                                         <div class="col-12">
                                             <p class="mb-1"><strong>Account Name</strong></p>
                                             <p class="mb-0">PT Mistify Indonesia</p>
+                                        </div>
+                                        <div class="col-12">
+                                            <p class="mb-1"><strong>Transfer Amount</strong></p>
+                                            <p class="mb-0 text-primary fw-bold">
+                                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="alert alert-warning mt-3 mb-0">
@@ -117,18 +78,28 @@
                                 </div>
                             </div>
 
+                            <!-- E-Wallet & Virtual Account Details -->
                             <div id="walletDetails" class="card bg-light border-0 mb-4" style="display: none;">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title mb-3">E-Wallet Payment</h6>
-                                    <p class="mb-3">Scan this QR code to complete your payment:</p>
-                                    <img src="{{ asset('images/qr-code.png') }}" alt="QR Code"
-                                         class="img-fluid mb-3" style="max-width: 200px;">
+                                    <h6 class="card-title mb-3">Online Payment</h6>
+                                    <p class="mb-3">You will be redirected to our payment gateway to complete your payment.</p>
+                                    <div class="row g-3 justify-content-center mb-4">
+                                        <div class="col-auto">
+                                            <img src="{{ asset('images/payment/gopay.png') }}" alt="GoPay" height="30">
+                                        </div>
+                                        <div class="col-auto">
+                                            <img src="{{ asset('images/payment/shopeepay.png') }}" alt="ShopeePay" height="30">
+                                        </div>
+                                        <div class="col-auto">
+                                            <img src="{{ asset('images/payment/qris.png') }}" alt="QRIS" height="30">
+                                        </div>
+                                    </div>
                                     <div class="alert alert-info mb-0">
                                         <div class="d-flex gap-2">
                                             <i class="bi bi-info-circle"></i>
                                             <div>
                                                 <strong>Note:</strong>
-                                                <p class="mb-0">You will be redirected to the e-wallet payment page.</p>
+                                                <p class="mb-0">You can also pay using Virtual Account from various banks.</p>
                                             </div>
                                         </div>
                                     </div>
@@ -137,7 +108,7 @@
 
                             <button type="submit" class="btn btn-primary w-100" id="submitBtn">
                                 <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
-                                Confirm Payment
+                                Continue to Payment
                                 <i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </form>
@@ -163,9 +134,11 @@
                     if (this.value === 'bank_transfer') {
                         bankDetails.style.display = 'block';
                         walletDetails.style.display = 'none';
+                        submitBtn.textContent = 'Confirm Payment';
                     } else {
                         bankDetails.style.display = 'none';
                         walletDetails.style.display = 'block';
+                        submitBtn.textContent = 'Continue to Payment Gateway';
                     }
                 });
             });
