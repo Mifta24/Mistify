@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Services\MidtransService;
 use Illuminate\Support\Facades\DB;
@@ -205,7 +206,7 @@ class PaymentController extends Controller
                     $order->forceFill([
                         'payment_status' => Order::PAYMENT_PAID,
                         'status' => Order::STATUS_PROCESSING,
-                        'paid_at' => now(), 
+                        'paid_at' => now(),
                         'payment_details' => [
                             'transaction_id' => $request->transaction_id,
                             'payment_type' => $request->payment_type,
@@ -214,6 +215,16 @@ class PaymentController extends Controller
                             'gross_amount' => $request->gross_amount
                         ]
                     ])->save();
+
+                    // Update payment record
+                    $payment = Payment::where('order_id', $order->id)->first();
+                    if ($payment) {
+                        $payment->update([
+                            'status' => Payment::STATUS_COMPLETED,
+                            'paid_at' => now(),
+                            'notes' => 'Payment completed via ' . $request->payment_type
+                        ]);
+                    }
 
                     Log::info('Payment marked as PAID:', [
                         'order_number' => $order->order_number,
@@ -232,7 +243,6 @@ class PaymentController extends Controller
             DB::commit();
 
             return response()->json(['status' => 'success']);
-
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Payment Callback Error:', [
@@ -260,26 +270,25 @@ class PaymentController extends Controller
     }
 
     public function handleFinish(Order $order)
-{
-    try {
-        // Double check payment status
-        $order->refresh(); // Refresh order from database
+    {
+        try {
+            // Double check payment status
+            $order->refresh(); // Refresh order from database
 
-        if ($order->payment_status === Order::PAYMENT_PAID) {
+            if ($order->payment_status === Order::PAYMENT_PAID) {
+                return redirect()->route('orders.show', $order->order_number)
+                    ->with('success', 'Payment completed successfully!');
+            }
+
+            // If not paid, might still be processing
             return redirect()->route('orders.show', $order->order_number)
-                ->with('success', 'Payment completed successfully!');
+                ->with('info', 'Payment is being processed. We will notify you once confirmed.');
+        } catch (\Exception $e) {
+            Log::error('Payment Finish Error: ' . $e->getMessage());
+            return redirect()->route('payment.index', $order->order_number)
+                ->with('error', 'Error checking payment status. Please contact support.');
         }
-
-        // If not paid, might still be processing
-        return redirect()->route('orders.show', $order->order_number)
-            ->with('info', 'Payment is being processed. We will notify you once confirmed.');
-
-    } catch (\Exception $e) {
-        Log::error('Payment Finish Error: ' . $e->getMessage());
-        return redirect()->route('payment.index', $order->order_number)
-            ->with('error', 'Error checking payment status. Please contact support.');
     }
-}
 
     public function instructions(Order $order)
     {
@@ -301,7 +310,4 @@ class PaymentController extends Controller
 
         return view('front.payment.instructions', compact('order', 'bankDetails'));
     }
-
-
-
 }
