@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Spatie\Permission\Middlewares\PermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,10 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
+            'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+            // 'permission' => PermissionMiddleware::class,
+            // 'role_or_permission' => RoleOrPermissionMiddleware::class,
         ]);
     })
     ->withProviders([
-       
+
         \App\Providers\ServiceServiceProvider::class,
     ])
     ->withExceptions(function (Exceptions $exceptions) {
