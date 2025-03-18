@@ -66,10 +66,18 @@
                         <i class="bi bi-cart-plus me-2"></i>
                         Add to Cart
                     </button>
-                    <button class="btn btn-outline-primary btn-lg">
+                    @auth
+                    <form action="{{ route('wishlist.toggle', $product) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-heart{{ auth()->user()->hasInWishlist($product) ? '-fill' : '' }}"></i>
+                        </button>
+                    </form>
+                @endauth
+                    {{-- <button class="btn btn-outline-primary btn-lg">
                         <i class="bi bi-heart me-2"></i>
                         Add to Wishlist
-                    </button>
+                    </button> --}}
                 </div>
 
                 <!-- Product Details Accordion -->
