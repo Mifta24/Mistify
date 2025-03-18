@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('order_number')->unique();  // Nomor pesanan unik
             $table->decimal('total_price', 10, 2);
-            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled','shipped','delivered'])->default('pending');
             $table->string('shipping_name');
             $table->string('shipping_phone');
             $table->text('shipping_address');

@@ -14,7 +14,12 @@
                         </button>
                     </div>
                 </div>
-
+                <!-- Add this inside the Order Status card, after the status badges -->
+                <div class="col-auto">
+                    <a href="{{ route('orders.track', $order->order_number) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-truck me-1"></i> Track Order
+                    </a>
+                </div>
                 <!-- Order Status -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
@@ -49,19 +54,59 @@
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
                                 <h5 class="card-title mb-4">Order Items</h5>
-                                @foreach($order->items as $item)
+                                @foreach ($order->items as $item)
                                     <div class="row align-items-center mb-4">
                                         <div class="col-auto">
                                             <img src="{{ asset('storage/' . $item->product->image) }}"
-                                                 alt="{{ $item->product->name }}"
-                                                 class="rounded"
-                                                 style="width: 64px; height: 64px; object-fit: cover;">
+                                                alt="{{ $item->product->name }}" class="rounded"
+                                                style="width: 64px; height: 64px; object-fit: cover;">
                                         </div>
                                         <div class="col">
                                             <h6 class="mb-1">{{ $item->product->name }}</h6>
                                             <p class="text-muted small mb-0">
-                                                {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
+                                                {{ $item->quantity }} x Rp
+                                                {{ number_format($item->price, 0, ',', '.') }}
                                             </p>
+
+                                            {{-- Show review button or existing review --}}
+                                            @if ($order->status === 'completed')
+                                                @php
+                                                    $review = $item->product
+                                                        ->reviews()
+                                                        ->where('user_id', auth()->id())
+                                                        ->where('order_id', $order->id)
+                                                        ->first();
+                                                @endphp
+
+                                                @if ($review)
+                                                    <div class="mt-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-warning me-2">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= $review->rating)
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                    @else
+                                                                        <i class="bi bi-star"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <small
+                                                                class="text-muted">{{ $review->created_at->format('d M Y') }}</small>
+                                                        </div>
+                                                        @if ($review->comment)
+                                                            <p class="small text-muted mt-1 mb-0">
+                                                                {{ $review->comment }}</p>
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <div class="mt-2">
+                                                        <a href="{{ route('reviews.create', [$order, $item->product]) }}"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-star me-1"></i> Write a Review
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            @endif
                                         </div>
                                         <div class="col-auto">
                                             <span class="fw-bold">
@@ -105,7 +150,7 @@
                                 <p class="mb-1">{{ $order->shipping_address }}</p>
                                 <p class="mb-0">{{ $order->shipping_city }}, {{ $order->shipping_postal_code }}</p>
 
-                                @if($order->notes)
+                                @if ($order->notes)
                                     <hr>
                                     <div class="text-muted small">
                                         <strong>Notes:</strong><br>
@@ -117,12 +162,12 @@
                     </div>
                 </div>
 
-                @if($order->status === 'pending' || $order->status === 'processing')
+                @if ($order->status === 'pending' || $order->status === 'processing')
                     <div class="text-center mt-4">
                         <form action="{{ route('orders.cancel', $order) }}" method="POST" class="d-inline">
                             @csrf
                             <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to cancel this order?')">
+                                onclick="return confirm('Are you sure you want to cancel this order?')">
                                 Cancel Order
                             </button>
                         </form>
@@ -133,16 +178,20 @@
     </div>
 
     @push('styles')
-    <style>
-        @media print {
-            .btn, nav, footer {
-                display: none !important;
+        <style>
+            @media print {
+
+                .btn,
+                nav,
+                footer {
+                    display: none !important;
+                }
+
+                .card {
+                    border: none !important;
+                    box-shadow: none !important;
+                }
             }
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-            }
-        }
-    </style>
+        </style>
     @endpush
 </x-app-layout>

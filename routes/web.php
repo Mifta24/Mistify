@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\MidtransController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,16 +78,16 @@ Route::middleware(['auth'])->group(function () {
 
     // Payment Process
     Route::controller(PaymentController::class)
-    ->prefix('payment')
-    ->name('payment.')
-    ->group(function () {
-        Route::get('/{order:order_number}', 'index')->name('index');
-        Route::post('/{order:order_number}/process', 'process')->name('process');
-        Route::get('/{order:order_number}/instructions', 'instructions')->name('instructions');
-        Route::get('/{order:order_number}/finish', 'handleFinish')->name('finish');
-        Route::get('/{order:order_number}/error', 'handleError')->name('error');
-        Route::get('/{order:order_number}/cancel', 'handleCancel')->name('cancel');
-    });
+        ->prefix('payment')
+        ->name('payment.')
+        ->group(function () {
+            Route::get('/{order:order_number}', 'index')->name('index');
+            Route::post('/{order:order_number}/process', 'process')->name('process');
+            Route::get('/{order:order_number}/instructions', 'instructions')->name('instructions');
+            Route::get('/{order:order_number}/finish', 'handleFinish')->name('finish');
+            Route::get('/{order:order_number}/error', 'handleError')->name('error');
+            Route::get('/{order:order_number}/cancel', 'handleCancel')->name('cancel');
+        });
 
 
     // Order Management
@@ -100,6 +101,12 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{order}/track', 'track')->name('track');
             Route::get('/{order}/print', 'print')->name('print')->middleware('admin');
         });
+
+    // Review routes
+    Route::get('orders/{order}/products/{product}/review', [ReviewController::class, 'create'])
+        ->name('reviews.create');
+    Route::post('orders/{order}/products/{product}/review', [ReviewController::class, 'store'])
+        ->name('reviews.store');
 
 
     // Midtrans Routes
