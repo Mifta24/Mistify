@@ -22,12 +22,7 @@
                                 <p class="text-primary mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
 
                                 <div class="d-flex gap-2">
-                                    <form action="{{ route('cart.add', $product) }}" method="POST" class="flex-grow-1">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary btn-sm w-100">
-                                            <i class="bi bi-cart-plus me-1"></i> Add to Cart
-                                        </button>
-                                    </form>
+                                    
                                     <form action="{{ route('wishlist.toggle', $product) }}" method="POST">
                                         @csrf
                                         <button type="submit" class="btn btn-outline-danger btn-sm">

@@ -67,13 +67,19 @@
                         Add to Cart
                     </button>
                     @auth
-                    <form action="{{ route('wishlist.toggle', $product) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                            <i class="bi bi-heart{{ auth()->user()->hasInWishlist($product) ? '-fill' : '' }}"></i>
-                        </button>
-                    </form>
-                @endauth
+                        <form action="{{ route('wishlist.toggle', $product) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                @if (auth()->user()->hasInWishlist($product))
+                                    Remove from Wishlist
+                                    <i class="bi bi-heart-fill"></i>
+                                @else
+                                    Add to Wishlist
+                                    <i class="bi bi-heart{{ auth()->user()->hasInWishlist($product) ? '-fill' : '' }}"></i>
+                                @endif
+                            </button>
+                        </form>
+                    @endauth
                     {{-- <button class="btn btn-outline-primary btn-lg">
                         <i class="bi bi-heart me-2"></i>
                         Add to Wishlist
@@ -144,8 +150,6 @@
             </div>
         </div>
     </div>
-
-
 
 
 

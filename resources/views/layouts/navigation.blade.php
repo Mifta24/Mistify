@@ -44,6 +44,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
                             <li><a class="dropdown-item" href="{{ route('orders.index') }}">My Orders</a></li>
+                            <li><a class="dropdown-item" href="{{ route('wishlist.index') }}">My Wishlist</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
