@@ -29,13 +29,50 @@ class FrontController extends Controller
         return view('front.contact');
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        // menampilkan kategori
-        $categories = Category::get('id', 'name');
-        // menampilkan produk
-        $products = Product::with('category')->paginate(12); // Menampilkan 12 produk per halaman
-        return view('front.products', compact('products', 'categories'));
+        // Get categories
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->get(['id', 'name']);
+
+        // Initialize product query
+        $query = Product::with('category');
+
+        // Apply category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Apply sorting
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'newest':
+                    $query->latest();
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest(); // Default sorting
+        }
+
+        // Get paginated results with query string
+        $products = $query->paginate(12)->withQueryString();
+
+        // Pass current filters to view
+        $filters = [
+            'category' => $request->category,
+            'sort' => $request->sort
+        ];
+
+        return view('front.products', compact('products', 'categories', 'filters'));
     }
 
 
