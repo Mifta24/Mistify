@@ -44,6 +44,15 @@ class FrontController extends Controller
             $query->where('category_id', $request->category);
         }
 
+        // Apply search filter
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->where('name', 'like', $searchTerm)
+                  ->orWhere('description', 'like', $searchTerm);
+            });
+        }
+
         // Apply sorting
         if ($request->filled('sort')) {
             switch ($request->sort) {
@@ -69,7 +78,8 @@ class FrontController extends Controller
         // Pass current filters to view
         $filters = [
             'category' => $request->category,
-            'sort' => $request->sort
+            'sort' => $request->sort,
+            'search' => $request->search
         ];
 
         return view('front.products', compact('products', 'categories', 'filters'));

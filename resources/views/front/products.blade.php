@@ -16,6 +16,17 @@
         <div class="row align-items-center">
             <div class="col-md-8">
                 <div class="d-flex gap-3 flex-wrap">
+                    <div class="search-container" style="width: 250px;">
+                        <form method="GET" action="{{ route('products.index') }}" id="searchForm">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search products..."
+                                    name="search" id="searchInput" value="{{ request()->get('search') }}">
+                                <button class="btn btn-outline-secondary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                     <select class="form-select" id="categoryFilter" style="width: 200px;">
                         <option value="">All Categories</option>
                         @foreach ($categories as $category)
@@ -26,18 +37,18 @@
                         @endforeach
                     </select>
                     <select class="form-select" id="sortFilter" style="width: 200px;">
-                        <option value="">Sort By</option>
-                        <option value="price_asc" {{ request()->get('sort') == 'price_asc' ? 'selected' : '' }}>
-                            Price: Low to High
-                        </option>
-                        <option value="price_desc" {{ request()->get('sort') == 'price_desc' ? 'selected' : '' }}>
-                            Price: High to Low
-                        </option>
-                        <option value="newest" {{ request()->get('sort') == 'newest' ? 'selected' : '' }}>
-                            Newest First
-                        </option>
+                    <option value="">Sort By</option>
+                    <option value="price_asc" {{ request()->get('sort') == 'price_asc' ? 'selected' : '' }}>
+                        Price: Low to High
+                    </option>
+                    <option value="price_desc" {{ request()->get('sort') == 'price_desc' ? 'selected' : '' }}>
+                        Price: High to Low
+                    </option>
+                    <option value="newest" {{ request()->get('sort') == 'newest' ? 'selected' : '' }}>
+                        Newest First
+                    </option>
                     </select>
-                    @if(request()->has('category') || request()->has('sort'))
+                    @if (request()->has('category') || request()->has('sort') || request()->has('search'))
                         <button type="button" id="resetFilters" class="btn btn-outline-secondary">
                             <i class="bi bi-x-circle me-1"></i> Reset Filters
                         </button>
@@ -190,6 +201,8 @@
                 });
 
                 // Improved filter functionality
+                const searchInput = document.getElementById('searchInput');
+                const searchForm = document.getElementById('searchForm');
                 const categoryFilter = document.getElementById('categoryFilter');
                 const sortFilter = document.getElementById('sortFilter');
                 const resetFiltersBtn = document.getElementById('resetFilters');
@@ -205,6 +218,10 @@
 
                     // Build URL with filters
                     const params = new URLSearchParams();
+
+                    if (searchInput.value) {
+                        params.set('search', searchInput.value);
+                    }
 
                     if (categoryFilter.value) {
                         params.set('category', categoryFilter.value);
@@ -222,6 +239,12 @@
                 categoryFilter?.addEventListener('change', applyFilters);
                 sortFilter?.addEventListener('change', applyFilters);
 
+                // Handle search form submission
+                searchForm?.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    applyFilters();
+                });
+
                 // Reset filters button
                 resetFiltersBtn?.addEventListener('click', function() {
                     productsGrid.setAttribute('data-loading', 'true');
@@ -229,6 +252,9 @@
                 });
 
                 // Add active class to filters if they have values
+                if (searchInput && searchInput.value) {
+                    searchInput.classList.add('filter-active');
+                }
                 if (categoryFilter && categoryFilter.value) {
                     categoryFilter.classList.add('filter-active');
                 }
@@ -304,7 +330,9 @@
             }
 
             @keyframes spinner {
-                to {transform: rotate(360deg);}
+                to {
+                    transform: rotate(360deg);
+                }
             }
         </style>
     @endpush
