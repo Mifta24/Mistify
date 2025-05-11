@@ -14,7 +14,12 @@
                         </button>
                     </div>
                 </div>
-
+                <!-- Add this inside the Order Status card, after the status badges -->
+                <div class="col-auto">
+                    <a href="{{ route('orders.track', $order->order_number) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-truck me-1"></i> Track Order
+                    </a>
+                </div>
                 <!-- Order Status -->
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-body">
@@ -49,19 +54,59 @@
                         <div class="card shadow-sm border-0">
                             <div class="card-body p-4">
                                 <h5 class="card-title mb-4">Order Items</h5>
-                                @foreach($order->items as $item)
+                                @foreach ($order->items as $item)
                                     <div class="row align-items-center mb-4">
                                         <div class="col-auto">
                                             <img src="{{ asset('storage/' . $item->product->image) }}"
-                                                 alt="{{ $item->product->name }}"
-                                                 class="rounded"
-                                                 style="width: 64px; height: 64px; object-fit: cover;">
+                                                alt="{{ $item->product->name }}" class="rounded"
+                                                style="width: 64px; height: 64px; object-fit: cover;">
                                         </div>
                                         <div class="col">
                                             <h6 class="mb-1">{{ $item->product->name }}</h6>
                                             <p class="text-muted small mb-0">
-                                                {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}
+                                                {{ $item->quantity }} x Rp
+                                                {{ number_format($item->price, 0, ',', '.') }}
                                             </p>
+
+                                            {{-- Show review button or existing review --}}
+                                            @if ($order->status === 'delivered')
+                                                @php
+                                                    $review = $item->product
+                                                        ->reviews()
+                                                        ->where('user_id', auth()->id())
+                                                        ->where('order_id', $order->id)
+                                                        ->first();
+                                                @endphp
+
+                                                @if ($review)
+                                                    <div class="mt-2">
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="text-warning me-2">
+                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                    @if ($i <= $review->rating)
+                                                                        <i class="bi bi-star-fill"></i>
+                                                                    @else
+                                                                        <i class="bi bi-star"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <small
+                                                                class="text-muted">{{ $review->created_at->format('d M Y') }}</small>
+                                                        </div>
+                                                        @if ($review->comment)
+                                                            <p class="small text-muted mt-1 mb-0">
+                                                                {{ $review->comment }}</p>
+                                                        @endif
+                                                    </div>
+                                                @else
+                                                    <div class="mt-2">
+                                                        <a href="{{ route('reviews.create', [$order, $item->product]) }}"
+                                                            class="btn btn-sm btn-outline-primary">
+                                                            <i class="bi bi-star me-1"></i> Write a Review
+                                                        </a>
+                                                    </div>
+                                                @endif
+                                            @endif
                                         </div>
                                         <div class="col-auto">
                                             <span class="fw-bold">
@@ -105,7 +150,7 @@
                                 <p class="mb-1">{{ $order->shipping_address }}</p>
                                 <p class="mb-0">{{ $order->shipping_city }}, {{ $order->shipping_postal_code }}</p>
 
-                                @if($order->notes)
+                                @if ($order->notes)
                                     <hr>
                                     <div class="text-muted small">
                                         <strong>Notes:</strong><br>
@@ -117,32 +162,90 @@
                     </div>
                 </div>
 
-                @if($order->status === 'pending' || $order->status === 'processing')
+                @if ($order->status === 'pending' && $order->payment_status === 'unpaid')
                     <div class="text-center mt-4">
-                        <form action="{{ route('orders.cancel', $order) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-danger"
-                                    onclick="return confirm('Are you sure you want to cancel this order?')">
-                                Cancel Order
-                            </button>
-                        </form>
+                        <a href="{{ route('payment.index', $order->order_number) }}"
+                            class="btn btn-primary btn-lg px-5 me-3">
+                            <i class="bi bi-credit-card me-2"></i>Continue to Payment
+                        </a>
+
+                        <button type="button" class="btn btn-outline-danger btn-lg px-5" id="cancelOrderBtn">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Order
+                        </button>
                     </div>
+
+                    <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->order_number) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @elseif ($order->status === 'pending' || $order->status === 'processing')
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-outline-danger btn-lg px-5" id="cancelOrderBtn">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Order
+                        </button>
+                    </div>
+
+                    <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->order_number) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                    </form>
                 @endif
             </div>
         </div>
     </div>
 
     @push('styles')
-    <style>
-        @media print {
-            .btn, nav, footer {
-                display: none !important;
+        <style>
+            @media print {
+
+                .btn,
+                nav,
+                footer {
+                    display: none !important;
+                }
+
+                .card {
+                    border: none !important;
+                    box-shadow: none !important;
+                }
             }
-            .card {
-                border: none !important;
-                box-shadow: none !important;
-            }
-        }
-    </style>
+        </style>
     @endpush
-</x-app-layout>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+                if (cancelOrderBtn) {
+                    cancelOrderBtn.addEventListener('click', function() {
+                        Swal.fire({
+                            title: 'Cancel Your Order?',
+                            html: `
+                        <div class="text-start mb-4">
+                            <p class="mb-2">Are you sure you want to cancel your order?</p>
+                            <p class="text-muted small">Order #{{ $order->order_number }}</p>
+                            <hr>
+                            <div class="alert alert-warning mt-3">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                This action cannot be undone.
+                            </div>
+                        </div>
+                    `,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#dc3545',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Yes, cancel order',
+                            cancelButtonText: 'No, keep order',
+                            reverseButtons: true,
+                            focusCancel: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('cancelOrderForm').submit();
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
+    </x-app-layout>

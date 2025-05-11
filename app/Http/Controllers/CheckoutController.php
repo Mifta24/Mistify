@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Payment;
 use App\Models\Product;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
@@ -81,6 +82,19 @@ class CheckoutController extends Controller
                 'payment_method' => $request->input('payment_method')
             ]);
 
+            // Create payment record
+            Payment::create([
+                'order_id' => $order->id,
+                'payment_number' => 'PAY-' . uniqid(),
+                'amount' => $total,
+                'payment_method' => $request->input('payment_method'),
+                'status' => Payment::STATUS_PENDING,
+                'bank_name' => null,
+                'account_number' => null,
+                'account_name' => null,
+                'notes' => null,
+                'paid_at' => null
+            ]);
             // Create order items and update stock
             foreach ($cart as $id => $item) {
                 $product = Product::findOrFail($id);

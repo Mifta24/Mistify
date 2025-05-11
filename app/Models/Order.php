@@ -49,6 +49,7 @@ class Order extends Model
     const STATUS_SHIPPED = 'shipped';
     const STATUS_DELIVERED = 'delivered';
     const STATUS_CANCELLED = 'cancelled';
+    const STATUS_COMPLETED = 'completed';
 
     // Payment Status Constants
     const PAYMENT_UNPAID = 'unpaid';
@@ -210,5 +211,108 @@ class Order extends Model
     {
         return $this->payment_status === self::PAYMENT_UNPAID
             && $this->created_at->addHours(24)->isPast();
+    }
+
+    // Add these constants after existing status constants
+    const TRACKING_STEPS = [
+        self::STATUS_PENDING => [
+            'icon' => 'bi-box-seam',
+            'title' => 'Order Placed',
+            'description' => 'Your order has been placed successfully',
+            'step' => 1,
+            'progress' => 25,
+        ],
+        self::STATUS_PROCESSING => [
+            'icon' => 'bi-gear',
+            'title' => 'Processing',
+            'description' => 'Your order is being processed',
+            'step' => 2,
+            'progress' => 50,
+        ],
+        self::STATUS_SHIPPED => [
+            'icon' => 'bi-truck',
+            'title' => 'Shipped',
+            'description' => 'Your order is on the way',
+            'step' => 3,
+            'progress' => 75,
+        ],
+        self::STATUS_DELIVERED => [
+            'icon' => 'bi-check-lg',
+            'title' => 'Delivered',
+            'description' => 'Your order has been delivered',
+            'step' => 4,
+            'progress' => 100,
+        ],
+    ];
+
+    // Add these methods after existing methods
+    public function getTrackingSteps(): array
+    {
+        return self::TRACKING_STEPS;
+    }
+
+    public function getCurrentStep(): int
+    {
+        return self::TRACKING_STEPS[$this->status]['step'] ?? 1;
+    }
+
+    public function getTrackingProgress(): int
+    {
+        return self::TRACKING_STEPS[$this->status]['progress'] ?? 0;
+    }
+
+    public function getLastUpdatedAt(): ?Carbon
+    {
+        return collect([
+            $this->delivered_at,
+            $this->shipped_at,
+            $this->processed_at,
+            $this->created_at
+        ])->filter()->last();
+    }
+
+    public function getStatusIcon(): string
+    {
+        return self::TRACKING_STEPS[$this->status]['icon'] ?? 'bi-circle';
+    }
+
+    public function getStatusDescription(): string
+    {
+        return self::TRACKING_STEPS[$this->status]['description'] ?? 'Order status unknown';
+    }
+
+    public function getEstimatedDelivery(): Carbon
+    {
+        return match ($this->status) {
+            self::STATUS_PENDING => $this->created_at->addDays(5),
+            self::STATUS_PROCESSING => $this->processed_at->addDays(4),
+            self::STATUS_SHIPPED => $this->shipped_at->addDays(2),
+            self::STATUS_DELIVERED => $this->delivered_at,
+            default => $this->created_at->addDays(5),
+        };
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === self::STATUS_DELIVERED;
+    }
+
+    public function getNextStatus(): ?string
+    {
+        return match ($this->status) {
+            self::STATUS_PENDING => self::STATUS_PROCESSING,
+            self::STATUS_PROCESSING => self::STATUS_SHIPPED,
+            self::STATUS_SHIPPED => self::STATUS_DELIVERED,
+            default => null,
+        };
+    }
+
+    public function canUpdateStatus(): bool
+    {
+        return !in_array($this->status, [
+            self::STATUS_DELIVERED,
+            self::STATUS_CANCELLED,
+            self::STATUS_COMPLETED
+        ]);
     }
 }
