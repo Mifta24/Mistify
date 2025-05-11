@@ -40,17 +40,17 @@
             <div class="service-card">
                 <img src="logos/giftbox.png" alt="Gifting icon" loading="lazy">
                 <h2>Gifting</h2>
-                <p>Quo obcaecati distinctio temporibus suscipit illum placeat alias error voluptas.</p>
+                <p>Send thoughtful gifts to your loved ones with ease.</p>
             </div>
             <div class="service-card">
                 <img src="logos/perfume-spray.png" alt="Refills icon" loading="lazy">
                 <h2>Refills</h2>
-                <p>Suspendisse mauris nulla, elementum a consectetur sit amet, dapibus eget mauris.</p>
+                <p>Easily reorder your favorite products with one click.</p>
             </div>
             <div class="service-card">
                 <img src="logos/refund.png" alt="Returns icon" loading="lazy">
                 <h2>Returns</h2>
-                <p>Ut vel felis at mi semper mollis.</p>
+                <p>Hassle-free returns with easy tracking.</p>
             </div>
         </div>
     </div>

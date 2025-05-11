@@ -1,3 +1,7 @@
+# Before editing the code, don't forget to
+
+    git pull origin main
+
 Based on the information provided, here's an updated README for your project:
 
 ---

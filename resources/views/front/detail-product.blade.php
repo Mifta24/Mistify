@@ -29,7 +29,7 @@
                         <div class="rating">
                             @for ($i = 1; $i <= 5; $i++)
                                 <i class="bi bi-star-fill {{ $i <= 4 ? 'text-warning' : 'text-muted' }}"></i>
-                            @endfor
+                                @endfor
                         </div>
                         <span class="text-muted small">(24 Reviews)</span>
                     </div>
@@ -128,24 +128,24 @@
             <h3 class="mb-4">You May Also Like</h3>
             <div class="row g-4">
                 @foreach ($relatedProducts as $relatedProduct)
-                    <div class="col-6 col-md-3">
-                        <div class="card h-100 border-0 shadow-sm">
-                            <img src="{{ asset('storage/' . $relatedProduct->image) }}" class="card-img-top"
-                                alt="{{ $relatedProduct->name }}" style="height: 200px; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title h6 mb-1">
-                                    <a href="{{ route('products.show', $relatedProduct) }}"
-                                        class="text-decoration-none text-dark">
-                                        {{ $relatedProduct->name }}
-                                    </a>
-                                </h5>
-                                <p class="text-muted small mb-2">{{ $relatedProduct->category->name }}</p>
-                                <span class="fw-bold text-primary">
-                                    Rp {{ number_format($relatedProduct->price, 0, ',', '.') }}
-                                </span>
-                            </div>
+                <div class="col-6 col-md-3">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="{{ asset('storage/' . $relatedProduct->image) }}" class="card-img-top"
+                            alt="{{ $relatedProduct->name }}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title h6 mb-1">
+                                <a href="{{ route('products.show', $relatedProduct) }}"
+                                    class="text-decoration-none text-dark">
+                                    {{ $relatedProduct->name }}
+                                </a>
+                            </h5>
+                            <p class="text-muted small mb-2">{{ $relatedProduct->category->name }}</p>
+                            <span class="fw-bold text-primary">
+                                Rp {{ number_format($relatedProduct->price, 0, ',', '.') }}
+                            </span>
                         </div>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -154,7 +154,7 @@
 
 
     @push('scripts')
-        <script>
+    <!-- <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const addToCartBtn = document.getElementById('addToCartBtn');
                 const quantityInput = document.querySelector('input[wire\\:model="quantity"]');
@@ -202,7 +202,7 @@
                         });
                 });
             });
-        </script>
+        </script> -->
     @endpush
 
 </x-app-layout>
