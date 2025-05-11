@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use \Midtrans\Config as MidtransConfig;
 use \Midtrans\Snap;
 
@@ -66,12 +67,15 @@ class MidtransService extends BaseService
     public function createTransaction(Order $order)
     {
         try {
-            // Get ngrok URL from config or environment
-            $baseUrl = config('app.url'); // Make sure this is set to your ngrok URL
+            // Generate a unique transaction ID by adding timestamp
+            $uniqueOrderId = $order->order_number . '-' . time();
+
+            // Get base URL from config
+            // $baseUrl = config('app.url');
 
             $params = [
                 'transaction_details' => [
-                    'order_id' => $order->order_number,
+                    'order_id' => $uniqueOrderId, // Use unique ID instead of order_number
                     'gross_amount' => (int) $order->total_price,
                 ],
                 'customer_details' => [
@@ -95,12 +99,21 @@ class MidtransService extends BaseService
                 ]
             ];
 
-            Log::info('Midtrans Request:', $params);
+            // Store mapping of unique ID to original order number
+            Cache::put('midtrans_order_' . $uniqueOrderId, $order->order_number, now()->addDays(1));
+
+            Log::info('Midtrans Request:', [
+                'params' => $params,
+                'original_order' => $order->order_number,
+                'unique_id' => $uniqueOrderId
+            ]);
+
             $snapToken = Snap::getSnapToken($params);
 
             return $this->success([
                 'snap_token' => $snapToken,
-                'order_number' => $order->order_number
+                'order_number' => $order->order_number,
+                'unique_order_id' => $uniqueOrderId // Pass this to the view
             ]);
         } catch (\Exception $e) {
             Log::error('Midtrans Error:', [

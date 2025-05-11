@@ -16,28 +16,31 @@
     </div>
 
     @push('scripts')
-    {{-- Use Sandbox SDK --}}
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-            data-client-key="{{ config('midtrans.client_key') }}"></script>
-    <script>
-        window.snap.pay('{{ $snapToken }}', {
-            onSuccess: function(result) {
-                console.log('Success:', result);
-                window.location.href = '{{ route('payment.finish', $order->order_number) }}';
-            },
-            onPending: function(result) {
-                console.log('Pending:', result);
-                window.location.href = '{{ route('payment.finish', $order->order_number) }}';
-            },
-            onError: function(result) {
-                console.error('Error:', result);
-                window.location.href = '{{ route('payment.error', $order->order_number) }}';
-            },
-            onClose: function() {
-                console.log('Customer closed the popup without finishing the payment');
-                window.location.href = '{{ route('payment.cancel', $order->order_number) }}';
-            }
-        });
-    </script>
+
+
+        {{-- Use Sandbox SDK --}}
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
+        </script>
+
+        <script>
+            window.snap.pay('{{ $snapToken }}', {
+                onSuccess: function(result) {
+                    console.log('Success:', result);
+                    window.location.href = '{{ route('payment.finish', $order->order_number) }}';
+                },
+                onPending: function(result) {
+                    console.log('Pending:', result);
+                    window.location.href = '{{ route('payment.finish', $order->order_number) }}';
+                },
+                onError: function(result) {
+                    console.error('Error:', result);
+                    window.location.href = '{{ route('payment.error', $order->order_number) }}';
+                },
+                onClose: function() {
+                    console.log('Customer closed the popup without finishing the payment');
+                    window.location.href = '{{ route('payment.cancel', $order->order_number) }}';
+                }
+            });
+        </script>
     @endpush
 </x-app-layout>

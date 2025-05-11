@@ -165,11 +165,11 @@
                 @if ($order->status === 'pending' && $order->payment_status === 'unpaid')
                     <div class="text-center mt-4">
                         <a href="{{ route('payment.index', $order->order_number) }}"
-                            class="btn btn-primary btn-lg px-5 me-3">
+                            class="btn btn-primary btn-md px-2 me-3">
                             <i class="bi bi-credit-card me-2"></i>Continue to Payment
                         </a>
 
-                        <button type="button" class="btn btn-outline-danger btn-lg px-5" id="cancelOrderBtn">
+                        <button type="button" class="btn btn-outline-danger btn-md px-2" id="cancelOrderBtn">
                             <i class="bi bi-x-circle me-2"></i>Cancel Order
                         </button>
                     </div>
@@ -247,5 +247,7 @@
                     });
                 }
             });
-        </script>
-    </x-app-layout>
+        </script>\
+    @endpush
+
+</x-app-layout>
