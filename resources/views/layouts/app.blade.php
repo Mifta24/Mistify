@@ -14,7 +14,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -24,6 +26,9 @@
     <!-- Add in head section -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <style>
         :root {
@@ -41,7 +46,10 @@
             background-color: #fafafa;
         }
 
-        h1, h2, h3, .elegant {
+        h1,
+        h2,
+        h3,
+        .elegant {
             font-family: 'Playfair Display', serif;
         }
 
@@ -73,7 +81,7 @@
         .btn-hover:hover {
             background-color: var(--accent-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         /* Navigation */
@@ -118,7 +126,7 @@
         }
 
         #image-container-1 {
-            background-image: url('{{ asset("images/hero-perfume.jpg") }}');
+            background-image: url('{{ asset('images/hero-perfume.jpg') }}');
             background-size: cover;
             background-position: center;
             height: 500px;
@@ -164,13 +172,13 @@
             padding: 30px;
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
 
         .service-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .service-card img {
@@ -221,13 +229,13 @@
             background-color: white;
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             transition: all 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
 
         .product-info {
@@ -251,25 +259,51 @@
             padding: 80px 0;
         }
 
-        .testimonial {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            text-align: center;
+        .testimonial-carousel {
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+        }
+
+        .testimonial {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial:hover {
+            transform: translateY(-5px);
         }
 
         .quote {
-            font-size: 1.2rem;
+            font-size: 18px;
+            color: #333;
             font-style: italic;
-            margin-bottom: 20px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .quote::before,
+        .quote::after {
+            content: '"';
+            font-size: 30px;
+            color: var(--accent-color);
+            font-family: serif;
         }
 
         .author {
             font-weight: 600;
-            color: var(--accent-color);
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .swiper-pagination-bullet-active {
+            background-color: var(--primary-color);
         }
 
         /* Footer */
@@ -283,13 +317,14 @@
             padding: 60px 20px;
         }
 
-        #footer h1, #footer h2 {
+        #footer h1,
+        #footer h2 {
             color: white;
             margin-bottom: 20px;
         }
 
         #footer p {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             margin-bottom: 15px;
         }
 
@@ -326,7 +361,9 @@
         }
 
         @media (max-width: 768px) {
-            .container-3-services, .container-4-collection {
+
+            .container-3-services,
+            .container-4-collection {
                 grid-template-columns: 1fr 1fr;
             }
 
@@ -336,7 +373,9 @@
         }
 
         @media (max-width: 576px) {
-            .container-3-services, .container-4-collection {
+
+            .container-3-services,
+            .container-4-collection {
                 grid-template-columns: 1fr;
             }
 
@@ -365,6 +404,22 @@
 
         <!-- Page Content -->
         <main>
+            {{-- Add this where you want your flash messages to appear, typically below the navigation --}}
+            <div class="container mt-4">
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                @endif
+            </div>
             {{ $slot }}
             <footer id="footer">
                 <div>
@@ -402,6 +457,31 @@
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Swiper for testimonials
+            const testimonialSwiper = new Swiper('.testimonial-swiper', {
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+                spaceBetween: 30,
+                effect: 'fade',
+                fadeEffect: {
+                    crossFade: true
+                }
+            });
+        });
+    </script>
 
     @stack('scripts')
 </body>

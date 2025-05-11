@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ProductReview;
 use Illuminate\Http\Request;
 
 class FrontController extends Controller
@@ -11,7 +12,22 @@ class FrontController extends Controller
 
     public function dashboard()
     {
-        return view('index');
+        // Provduct
+        $products = Product::with('category')
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        // Category
+        $categories = Category::where('is_active', true)
+            ->orderBy('sort_order')
+            ->take(5)
+            ->get(['id', 'name']);
+
+        // testimonials
+         $testimonials = ProductReview::with('user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('index', compact('products', 'categories', 'testimonials'));
     }
 
     public function about()
@@ -47,9 +63,9 @@ class FrontController extends Controller
         // Apply search filter
         if ($request->filled('search')) {
             $searchTerm = '%' . $request->search . '%';
-            $query->where(function($q) use ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
                 $q->where('name', 'like', $searchTerm)
-                  ->orWhere('description', 'like', $searchTerm);
+                    ->orWhere('description', 'like', $searchTerm);
             });
         }
 

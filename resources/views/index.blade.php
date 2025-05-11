@@ -2,11 +2,11 @@
     <div class="hero-section container-1">
         <div class="container-text">
             <h1 class="large-text">We care about Fragrances</h1>
-            <p class="lead my-4">Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum optio ea eos minus quae architecto cumque ipsa eius exercitationem nisi, et enim saepe sequi voluptates ducimus provident, nemo aut molestias!</p>
+            <p class="lead my-4">Perfume is the art of creating a unique and lasting impression on the senses.</p>
             <button class="button-style btn-hover">See more</button>
         </div>
-        <div id="image-container-1" class="shadow-lg rounded">
-            <!-- <img src="images/first-image.png" alt="image"> -->
+        <div id="image-container-1" class="shadow-md rounded">
+            <img src="{{ asset('images/perfume-background.jpg') }}" class="rounded h-100" alt="image">
         </div>
     </div>
 
@@ -16,11 +16,14 @@
             <p class="tagline">Luxury Defined. One Drop at a Time.</p>
         </div>
         <div class="brand-image">
-            <img src="images/second-image.jpg" alt="Perfume bottle" class="rounded shadow-lg img-fluid">
+            <img src="https://images.rawpixel.com/image_png_1100/cHJpdmF0ZS90ZW1wbGF0ZXMvZmlsZXMvY3JlYXRlX3Rvb2wvMjAyNC0wMi8wMWhxMnB2ZDZkZWM1bjBwemJ6MHducHB0NS1sc3ZiYmlobi5wbmc.png"
+                alt="Perfume bottle" class="rounded shadow-lg img-fluid">
         </div>
         <div class="container-text">
             <h2 class="big-text">Why shop with Essence</h2>
-            <p class="my-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia quod, enim quo laboriosam possimus expedita atque neque illo laudantium commodi ut impedit cumque perferendis! Vitae et perferendis cum voluptas eaque!</p>
+            <p class="my-4">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Mollitia quod, enim quo
+                laboriosam possimus expedita atque neque illo laudantium commodi ut impedit cumque perferendis! Vitae et
+                perferendis cum voluptas eaque!</p>
             <button class="button-style btn-hover">Read More</button>
         </div>
     </div>
@@ -31,7 +34,8 @@
             <div class="service-card">
                 <img src="logos/recommendation.png" alt="Recommendation icon" loading="lazy">
                 <h2>Recommendations</h2>
-                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo obcaecati distinctio temporibus suscipit illum placeat alias error voluptas.</p>
+                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quo obcaecati distinctio temporibus
+                    suscipit illum placeat alias error voluptas.</p>
             </div>
             <div class="service-card">
                 <img src="logos/giftbox.png" alt="Gifting icon" loading="lazy">
@@ -56,66 +60,63 @@
         <p class="text-center mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
         <div class="category-nav">
             <ul class="nav-pills">
-                <li><a href="#" class="active">Floral</a></li>
-                <li><a href="#">Woody</a></li>
-                <li><a href="#">Fruity</a></li>
-                <li><a href="#">Fresh</a></li>
+                <li><a href="{{ route('products.index') }}"
+                        class="nav-link {{ !request('category') ? 'active' : '' }}">All</a></li>
+                @foreach ($categories as $category)
+                    <li>
+                        <a href="{{ route('products.index', ['category' => $category->id]) }}"
+                            class="nav-link {{ request('category') == $category->id ? 'active' : '' }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
+                @endforeach
             </ul>
         </div>
 
         <div class="container-4-collection">
-            <div class="product-card">
-                <img src="images/perfume-image1.jpg" alt="Perfume 1" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Floral Elegance</h3>
-                    <p>$149.99</p>
+            @if (isset($products) && count($products) > 0)
+                @foreach ($products as $product)
+                    <div class="product-card">
+                        <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" loading="lazy"
+                            class="img-fluid rounded">
+                        <div class="product-info">
+                            <h3>{{ $product->name }}</h3>
+                            <p>${{ number_format($product->price, 2) }}</p>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="no-products">
+                    <p>No products available at the moment.</p>
                 </div>
-            </div>
-            <div class="product-card">
-                <img src="images/perfume-image2.jpg" alt="Perfume 2" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Woody Notes</h3>
-                    <p>$129.99</p>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/perfume-image3.jpg" alt="Perfume 3" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Ocean Breeze</h3>
-                    <p>$159.99</p>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/perfume-image4.jpg" alt="Perfume 4" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Midnight Rose</h3>
-                    <p>$179.99</p>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/perfume-image5.jpg" alt="Perfume 5" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Citrus Splash</h3>
-                    <p>$139.99</p>
-                </div>
-            </div>
-            <div class="product-card">
-                <img src="images/perfume-image6.jpg" alt="Perfume 6" loading="lazy" class="img-fluid rounded">
-                <div class="product-info">
-                    <h3>Amber Oud</h3>
-                    <p>$199.99</p>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
 
     <div class="testimonial-section">
         <h1 class="large-text text-center mb-5">What Our Customers Say</h1>
         <div class="testimonial-carousel">
-            <div class="testimonial">
-                <div class="quote">"Essence has the most amazing collection of fragrances. Their customer service is outstanding!"</div>
-                <div class="author">- Sarah Johnson</div>
-            </div>
+            @if (isset($testimonials) && count($testimonials) > 0)
+                <div class="swiper testimonial-swiper">
+                    <div class="swiper-wrapper">
+                        @foreach ($testimonials as $testimonial)
+                            <div class="swiper-slide">
+                                <div class="testimonial">
+                                    <div class="quote">"{{ $testimonial->comment }}"</div>
+                                    <div class="author">-
+                                        {{ isset($testimonial->user) ? $testimonial->user->name : $testimonial->author }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+            @else
+                <div class="no-testimonials">
+                    <p>No testimonials available at the moment.</p>
+                </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

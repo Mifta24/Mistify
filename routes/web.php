@@ -18,14 +18,13 @@ use App\Http\Controllers\WishlistController;
 */
 
 // Home & Dashboard
-Route::get('/', function () {
-    return view('index');
-})->name('home');
+// Route::get('/', function () {
+//     return view('index');
+// })->name('home');
 
-Route::get('/dashboard', function () {
-    return view('index');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', [FrontController::class, 'dashboard'])->name('dashboard');
 
+// Route::get('/dashboard', [FrontController::class, 'dashboard'])->name('dashboard');
 // Static Pages
 Route::controller(FrontController::class)->group(function () {
     Route::get('/about', 'about')->name('about');

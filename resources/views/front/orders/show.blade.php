@@ -69,7 +69,7 @@
                                             </p>
 
                                             {{-- Show review button or existing review --}}
-                                            @if ($order->status === 'completed')
+                                            @if ($order->status === 'delivered')
                                                 @php
                                                     $review = $item->product
                                                         ->reviews()
@@ -162,16 +162,33 @@
                     </div>
                 </div>
 
-                @if ($order->status === 'pending' || $order->status === 'processing')
+                @if ($order->status === 'pending' && $order->payment_status === 'unpaid')
                     <div class="text-center mt-4">
-                        <form action="{{ route('orders.cancel', $order) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-danger"
-                                onclick="return confirm('Are you sure you want to cancel this order?')">
-                                Cancel Order
-                            </button>
-                        </form>
+                        <a href="{{ route('payment.index', $order->order_number) }}"
+                            class="btn btn-primary btn-lg px-5 me-3">
+                            <i class="bi bi-credit-card me-2"></i>Continue to Payment
+                        </a>
+
+                        <button type="button" class="btn btn-outline-danger btn-lg px-5" id="cancelOrderBtn">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Order
+                        </button>
                     </div>
+
+                    <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->order_number) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                    </form>
+                @elseif ($order->status === 'pending' || $order->status === 'processing')
+                    <div class="text-center mt-4">
+                        <button type="button" class="btn btn-outline-danger btn-lg px-5" id="cancelOrderBtn">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Order
+                        </button>
+                    </div>
+
+                    <form id="cancelOrderForm" action="{{ route('orders.cancel', $order->order_number) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                    </form>
                 @endif
             </div>
         </div>
@@ -194,4 +211,41 @@
             }
         </style>
     @endpush
-</x-app-layout>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+                if (cancelOrderBtn) {
+                    cancelOrderBtn.addEventListener('click', function() {
+                        Swal.fire({
+                            title: 'Cancel Your Order?',
+                            html: `
+                        <div class="text-start mb-4">
+                            <p class="mb-2">Are you sure you want to cancel your order?</p>
+                            <p class="text-muted small">Order #{{ $order->order_number }}</p>
+                            <hr>
+                            <div class="alert alert-warning mt-3">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                This action cannot be undone.
+                            </div>
+                        </div>
+                    `,
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#dc3545',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Yes, cancel order',
+                            cancelButtonText: 'No, keep order',
+                            reverseButtons: true,
+                            focusCancel: true
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                document.getElementById('cancelOrderForm').submit();
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
+    </x-app-layout>

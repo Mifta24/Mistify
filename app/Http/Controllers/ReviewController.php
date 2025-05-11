@@ -17,7 +17,7 @@ class ReviewController extends Controller
         }
 
         // Check if order is delivered
-        if ($order->status !== Order::STATUS_COMPLETED) {
+        if ($order->status !== Order::STATUS_DELIVERED) {
             return back()->with('error', 'You can only review products from delivered orders.');
         }
 
@@ -48,7 +48,7 @@ class ReviewController extends Controller
         }
 
         // Check if order is delivered
-        if ($order->status !== Order::STATUS_COMPLETED) {
+        if ($order->status !== Order::STATUS_DELIVERED) {
             return back()->with('error', 'You can only review products from delivered orders.');
         }
 
