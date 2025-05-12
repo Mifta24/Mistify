@@ -118,6 +118,7 @@
 
         /* Hero Section */
         .hero-section {
+            background-color: #212529;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
@@ -125,8 +126,9 @@
             align-items: center;
         }
 
+
         #image-container-1 {
-            background-image: url('{{ asset('images/hero-perfume.jpg') }}');
+            /* background-image: url('{{ asset(' images/hero-perfume.jpg') }}'); */
             background-size: cover;
             background-position: center;
             height: 500px;
@@ -407,17 +409,17 @@
             {{-- Add this where you want your flash messages to appear, typically below the navigation --}}
             <div class="container mt-4">
                 @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 @endif
 
                 @if (session('error'))
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        {{ session('error') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
                 @endif
             </div>
             {{ $slot }}
