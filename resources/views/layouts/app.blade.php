@@ -118,6 +118,7 @@
 
         /* Hero Section */
         .hero-section {
+            background-color: #212529;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
@@ -125,8 +126,8 @@
             align-items: center;
         }
 
+
         #image-container-1 {
-            /* background-image: url('{{ asset('images/hero-perfume.jpg') }}'); */
             background-size: cover;
             background-position: center;
             height: 500px;
