@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ route('dashboard') }}">
-            <img src="{{ asset('images/Logo_parfume.png') }}" alt="Logo" style="height: 70px;">
+            <img src="{{ asset('images/Logo_parfume.png') }}" alt="Logo" style="height: 60px;">
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"

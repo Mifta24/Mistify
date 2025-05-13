@@ -36,8 +36,8 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
             ])
             ->font('Inter')
-            ->brandName('Mistify Admin')
-            ->brandLogo(asset('images/logo-parfume.jpg'))
+            ->brandName('Franada Admin')
+            ->brandLogo(asset('images/Logo_prafume_admin.png'))
             ->brandLogoHeight('3.5rem')
             ->favicon(asset('images/favicon.png'))
             ->navigationGroups([

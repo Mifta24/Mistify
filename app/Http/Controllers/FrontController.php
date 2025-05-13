@@ -15,7 +15,7 @@ class FrontController extends Controller
         // Provduct
         $products = Product::with('category')
             ->orderBy('created_at', 'desc')
-            ->take(5)
+            ->take(4)
             ->get();
         // Category
         $categories = Category::where('is_active', true)
@@ -24,7 +24,7 @@ class FrontController extends Controller
             ->get(['id', 'name']);
 
         // testimonials
-         $testimonials = ProductReview::with('user')
+        $testimonials = ProductReview::with('user')
             ->orderBy('created_at', 'desc')
             ->get();
         return view('index', compact('products', 'categories', 'testimonials'));
