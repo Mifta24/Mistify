@@ -82,9 +82,9 @@
             @if (isset($products) && count($products) > 0)
             @foreach ($products as $product)
             <div class="product-card">
-                <img src="https://drive.google.com/uc?export=view&id={{ $product->image }}" alt="gambar" class="img-fluid rounded">
 
 
+                <img src="{{ asset('storage/' . $product->image) }}" alt="gambar" class="img-fluid rounded">
                 <div class="product-info">
                     <h3>{{ $product->name }}</h3>
                     <p>${{ number_format($product->price, 2) }}</p>
