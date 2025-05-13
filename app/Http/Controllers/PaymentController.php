@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\MidtransService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 class PaymentController extends Controller
 {
@@ -96,7 +97,7 @@ class PaymentController extends Controller
         }
     }
 
-  
+
     public function callback(Request $request)
     {
         try {
@@ -108,7 +109,31 @@ class PaymentController extends Controller
 
             DB::beginTransaction();
 
-            $order = Order::where('order_number', $request->order_id)->firstOrFail();
+            // Extract original order number from transaction ID
+            $orderNumber = $request->order_id;
+
+            // If this is a unique ID with timestamp (contains hyphen)
+            if (strpos($orderNumber, '-') !== false) {
+                // Try to get the original order number from cache
+                $originalOrderNumber = Cache::get('midtrans_order_' . $orderNumber);
+
+                if ($originalOrderNumber) {
+                    $orderNumber = $originalOrderNumber;
+                    Log::info('Resolved original order number from cache', [
+                        'unique_id' => $request->order_id,
+                        'original_order' => $orderNumber
+                    ]);
+                } else {
+                    // Fallback: extract the part before the timestamp
+                    $orderNumber = explode('-', $orderNumber)[0];
+                    Log::info('Extracted original order number from transaction ID', [
+                        'unique_id' => $request->order_id,
+                        'extracted_order' => $orderNumber
+                    ]);
+                }
+            }
+
+            $order = Order::where('order_number', $orderNumber)->firstOrFail();
 
             // Update order status
             switch ($request->transaction_status) {
@@ -123,7 +148,8 @@ class PaymentController extends Controller
                             'payment_type' => $request->payment_type,
                             'transaction_time' => $request->transaction_time,
                             'transaction_status' => $request->transaction_status,
-                            'gross_amount' => $request->gross_amount
+                            'gross_amount' => $request->gross_amount,
+                            'midtrans_order_id' => $request->order_id // Store the unique ID
                         ]
                     ])->save();
 
@@ -139,7 +165,8 @@ class PaymentController extends Controller
 
                     Log::info('Payment marked as PAID:', [
                         'order_number' => $order->order_number,
-                        'transaction_id' => $request->transaction_id
+                        'transaction_id' => $request->transaction_id,
+                        'midtrans_order_id' => $request->order_id
                     ]);
                     break;
 

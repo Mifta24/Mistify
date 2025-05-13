@@ -33,8 +33,8 @@ class CategoryResource extends Resource
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(fn (string $state, Forms\Set $set) =>
-                                        $set('slug', Str::slug($state)))
+                                    ->afterStateUpdated(fn(string $state, Forms\Set $set) =>
+                                    $set('slug', Str::slug($state)))
                                     ->placeholder('Enter category name'),
 
                                 Forms\Components\TextInput::make('slug')
@@ -119,8 +119,8 @@ class CategoryResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->searchable()
                     ->sortable()
-                    ->description(fn (Category $record): string =>
-                        Str::limit($record->description ?? '', 50)),
+                    ->description(fn(Category $record): string =>
+                    Str::limit($record->description ?? '', 50)),
 
                 Tables\Columns\TextColumn::make('slug')
                     ->searchable()
@@ -171,14 +171,14 @@ class CategoryResource extends Resource
                     Tables\Actions\BulkAction::make('activate')
                         ->label('Activate Selected')
                         ->icon('heroicon-o-check')
-                        ->action(fn (Collection $records) =>
-                            $records->each->update(['is_active' => true]))
+                        ->action(fn(Collection $records) =>
+                        $records->each->update(['is_active' => true]))
                         ->requiresConfirmation(),
                     Tables\Actions\BulkAction::make('deactivate')
                         ->label('Deactivate Selected')
                         ->icon('heroicon-o-x-mark')
-                        ->action(fn (Collection $records) =>
-                            $records->each->update(['is_active' => false]))
+                        ->action(fn(Collection $records) =>
+                        $records->each->update(['is_active' => false]))
                         ->requiresConfirmation(),
                 ]),
             ])
@@ -213,7 +213,7 @@ class CategoryResource extends Resource
             'index' => Pages\ListCategories::route('/'),
             'create' => Pages\CreateCategory::route('/create'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
-            
+
         ];
     }
 }

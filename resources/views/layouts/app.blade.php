@@ -128,7 +128,6 @@
 
 
         #image-container-1 {
-            /* background-image: url('{{ asset(' images/hero-perfume.jpg') }}'); */
             background-size: cover;
             background-position: center;
             height: 500px;
@@ -402,11 +401,16 @@
 
 <body class="font-sans antialiased">
     <div class="min-h-screen">
-        @include('layouts.navigation') <!-- Navbar -->
 
-        <!-- Page Content -->
+        <!-- Navigation -->
+        <header>
+            @include('layouts.navigation') <!-- Navbar -->
+        </header>
+
+
+        <!-- Main Content -->
         <main>
-            {{-- Add this where you want your flash messages to appear, typically below the navigation --}}
+            {{-- Flash Message --}}
             <div class="container mt-4">
                 @if (session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -422,38 +426,43 @@
                 </div>
                 @endif
             </div>
+
+            {{-- page content --}}
             {{ $slot }}
-            <footer id="footer">
-                <div>
-                    <h1 class="big-text">Essence</h1>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo architecto ut veritatis illum
-                        quaerat. Ea similique harum repellat excepturi! Consequuntur iusto deserunt accusantium tempore
-                        ullam.</p>
-                    <p>&copy; 2024 Essence - All rights Reserved</p>
-
-                </div>
-                <div>
-                    <h2 class="big-text">Opening Times</h2>
-                    <p>Monday - Friday: 10.00 - 23.00
-                        <br>
-                        Saturday: 10.00 - 19.00
-                    </p>
-                    <div id="social-logos">
-                        <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" loading="lazy">
-                        <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" loading="lazy">
-                        <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" loading="lazy">
-                        <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" loading="lazy">
-                    </div>
-                </div>
-                <div>
-                    <h2 class="big-text">Contact Us </h2>
-                    <p>Tel: (+12) 345 678 910</p>
-                    <p>Email: info@essence.com</p>
-                    <p>Address: 12345 Street Name, City Name, Country</p>
-
-                </div>
-            </footer>
         </main>
+
+        {{-- Footer --}}
+        <footer id="footer">
+            <div>
+                <h1 class="big-text">Essence</h1>
+                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo architecto ut veritatis illum
+                    quaerat. Ea similique harum repellat excepturi! Consequuntur iusto deserunt accusantium tempore
+                    ullam.</p>
+                <p>&copy; 2024 Essence - All rights Reserved</p>
+
+            </div>
+            <div>
+                <h2 class="big-text">Opening Times</h2>
+                <p>Monday - Friday: 10.00 - 23.00
+                    <br>
+                    Saturday: 10.00 - 19.00
+                </p>
+                <div id="social-logos">
+                    <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" loading="lazy">
+                    <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" loading="lazy">
+                    <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" loading="lazy">
+                    <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" loading="lazy">
+                </div>
+            </div>
+            <div>
+                <h2 class="big-text">Contact Us </h2>
+                <p>Tel: (+12) 345 678 910</p>
+                <p>Email: info@essence.com</p>
+                <p>Address: 12345 Street Name, City Name, Country</p>
+
+            </div>
+        </footer>
+
     </div>
 
 
