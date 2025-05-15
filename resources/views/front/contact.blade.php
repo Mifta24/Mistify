@@ -1,110 +1,119 @@
 <x-app-layout>
     {{-- Hero Section with Parallax Effect --}}
-    <div class="hero-section container-1 bg-gradient-to-r from-primary-color to-accent-color text-white py-20 relative overflow-hidden">
-        <div class="absolute inset-0 bg-black opacity-20"></div>
-        <div class="container mx-auto px-4 relative z-10">
-            <div class="text-center">
-                <h1 class="large-text font-bold mb-4 elegant">Hubungi Kami</h1>
-                <p class="tagline max-w-3xl mx-auto text-lg">Kami siap membantu menjawab pertanyaan dan memberikan saran terbaik untuk kebutuhan parfum Anda</p>
-            </div>
+    <section class="py-5 text-dark" >
+        <div class="container-lg text-center">
+            <h1 class="display-4 fw-bold mb-3">Hubungi Kami</h1>
+            <p class="lead">Kami siap membantu menjawab pertanyaan dan memberikan saran terbaik untuk kebutuhan parfum Anda.</p>
         </div>
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="w-full h-auto">
-                <path fill="#ffffff" fill-opacity="1" d="M0,128L48,133.3C96,139,192,149,288,170.7C384,192,480,224,576,218.7C672,213,768,171,864,170.7C960,171,1056,213,1152,213.3C1248,213,1344,171,1392,149.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-            </svg>
-        </div>
-    </div>
+    </section>
 
     {{-- Main Content --}}
-    <div class="container mx-auto px-4 py-12">
-        {{-- Contact Form Section --}}
-        <div class="container py-5">
-        <div class="row justify-content-center g-4">
-            <!-- Form Kirim Pesan -->
-            <div class="col-md-6 col-lg-6 p-4 bg-white rounded-4 shadow-sm">
-            <h2 class="big-text elegant text-primary-color mb-2 text-center">Kirim Pesan</h2>
-            <div class="mb-4 mx-auto" style="width: 60px; height: 4px; background-color: #d7bfff;"></div>
-            <p class="text-muted mb-4 text-center">
-                Apakah Anda memiliki pertanyaan tentang produk kami, membutuhkan rekomendasi parfum, atau ingin memberikan masukan? Isi formulir di bawah ini, dan tim kami akan menghubungi Anda sesegera mungkin.
-            </p>
+    <section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-5 align-items-stretch">
+
+        <!-- Formulir Kontak -->
+        <div class="col-lg-6">
+            <div class="bg-white p-5 rounded-4 shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h2 class="fw-bold text-black mb-2 text-center">Kirim Pesan</h2>
+                <div class="mx-auto mb-4" style="width: 60px; height: 4px; background-color: #d7bfff;"></div>
+                <p class="text-muted text-center mb-4">
+                Apakah Anda memiliki pertanyaan, butuh rekomendasi, atau ingin memberikan masukan? Isi formulir ini, dan tim kami akan segera merespon Anda.
+                </p>
+            </div>
             <form>
-                <div class="row g-3 mb-3">
+                <div class="row g-3">
                 <div class="col-md-6">
                     <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" placeholder="Masukkan nama lengkap">
+                    <input type="text" class="form-control shadow-sm" placeholder="Masukkan nama lengkap">
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control" placeholder="email@example.com">
+                    <input type="email" class="form-control shadow-sm" placeholder="email@example.com">
                 </div>
+                <div class="col-12">
+                    <label class="form-label">Subjek</label>
+                    <input type="text" class="form-control shadow-sm" placeholder="Subjek pesan Anda">
                 </div>
-                <div class="mb-3">
-                <label class="form-label">Subjek</label>
-                <input type="text" class="form-control" placeholder="Subjek pesan Anda">
+                <div class="col-12">
+                    <label class="form-label">Pesan</label>
+                    <textarea class="form-control shadow-sm" rows="4" placeholder="Tulis pesan Anda di sini..."></textarea>
                 </div>
-                <div class="mb-3">
-                <label class="form-label">Pesan</label>
-                <textarea class="form-control" rows="4" placeholder="Tulis pesan Anda di sini..."></textarea>
-                </div>
-                <div class="text-center">
-                <button type="submit" class="btn btn-style">
+                <div class="col-12 text-center mt-3">
+                    <button type="submit" class="btn btn-outline-dark px-4 py-2">
                     <i class="bi bi-send me-2"></i>Kirim Pesan
-                </button>
+                    </button>
+                </div>
                 </div>
             </form>
             </div>
+        </div>
 
-            <!-- Informasi Kontak -->
-            <div class="col-md-6 col-lg-5 bg-primary-color text-dark p-4 rounded-4 shadow-sm">
-            <h2 class="big-text elegant mb-3">Informasi Kontak</h2>
-            <hr class="border-light mb-4">
-
-            <div class="mb-3 d-flex align-items-start">
-                <i class="bi bi-geo-alt-fill me-3 fs-5"></i>
+        <!-- Informasi Kontak -->
+        <div class="col-lg-6">
+            <div class="bg-white text-dark p-5 rounded-4 shadow-sm h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h2 class="fw-bold text-black mb-3">Informasi Kontak</h2>
+                <hr class="mb-4" style="border-top: 2px solid #d7bfff;">
+                <div class="mb-3 d-flex">
+                <i class="bi bi-geo-alt-fill text-black fs-5 me-3"></i>
                 <div>
-                <strong>Alamat:</strong><br>
-                Pondok Makmur Blok CS 4, Jl. Raya Kutabumi Blok CD2 No.15, Kuta Baru, Kec. Ps. Kemis, Kabupaten Tangerang, Banten 15560
+                    <strong>Alamat:</strong><br>
+                    Pondok Makmur Blok CS 4, Jl. Raya Kutabumi Blok CD2 No.15, Kuta Baru, Ps. Kemis, Tangerang, Banten 15560
                 </div>
-            </div>
-
-            <div class="mb-3 d-flex align-items-start">
-                <i class="bi bi-telephone-fill me-3 fs-5"></i>
-                <div>
-                <strong>Telepon:</strong><br>
-                (+62) 81287195398
-
                 </div>
-            </div>
-
-            <div class="mb-3 d-flex align-items-start">
-                <i class="bi bi-envelope-fill me-3 fs-5"></i>
-                <div>
-                <strong>Email:</strong><br>
-                franada@gmail.com
+                <div class="mb-3 d-flex">
+                <i class="bi bi-telephone-fill text-black fs-5 me-3"></i>
+                <div><strong>Telepon:</strong><br>(+62) 812-8719-5398</div>
                 </div>
-            </div>
-
-            <div class="mb-4 d-flex align-items-start">
-                <i class="bi bi-clock-fill me-3 fs-5"></i>
-                <div>
-                <strong>Jam Operasional:</strong><br>
-                Senin - Minggu: 11:00 - 23:00
+                <div class="mb-3 d-flex">
+                <i class="bi bi-envelope-fill text-black fs-5 me-3"></i>
+                <div><strong>Email:</strong><br>franada@gmail.com</div>
+                </div>
+                <div class="mb-4 d-flex">
+                <i class="bi bi-clock-fill text-black fs-5 me-3"></i>
+                <div><strong>Jam Operasional:</strong><br>Senin - Minggu: 11:00 - 23:00</div>
                 </div>
             </div>
 
             <div>
                 <h5 class="mb-3">Ikuti Kami</h5>
                 <div class="d-flex gap-3 fs-4">
-                <a href="#" class="text-dark"><i class="bi bi-facebook"></i></a>
-                <a href="#" class="text-dark"><i class="bi bi-instagram"></i></a>
-                <a href="#" class="text-dark"><i class="bi bi-twitter-x"></i></a>
-                <a href="#" class="text-dark"><i class="bi bi-youtube"></i></a>
+                <a href="#" class="text-dark hover-opacity"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="text-dark hover-opacity"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="text-dark hover-opacity"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="text-dark hover-opacity"><i class="bi bi-youtube"></i></a>
                 </div>
             </div>
             </div>
         </div>
+
         </div>
     </div>
+    </section>
+
+    <style>
+    .hover-opacity:hover {
+        opacity: 0.7;
+        transition: opacity 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #6c4ec2;
+        border-color: #6c4ec2;
+    }
+
+    .btn-primary:hover {
+        background-color: #593bb4;
+        border-color: #593bb4;
+    }
+
+    .text-primary {
+        color: #6c4ec2 !important;
+    }
+    </style>
+
 
         <!-- CTA Section -->
     <div class="text-white shadow-lg p-5 text-center position-relative overflow-hidden mb-2"
@@ -116,7 +125,7 @@
     <!-- Konten -->
     <div class="position-relative z-1">
         <h2 class="display-5 fw-bold elegant mb-3">Mulai Pengalaman Parfum Premium Anda</h2>
-        <p class="lead mb-4">Jelajahi koleksi parfum eksklusif kami dan temukan aroma yang mencerminkan kepribadian Anda.</p>
+        <p class="lead mb-4 text-white">Jelajahi koleksi parfum eksklusif kami dan temukan aroma yang mencerminkan kepribadian Anda.</p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3">
         <a href="#" class="btn btn-light text-primary-color fw-semibold px-4 py-2">

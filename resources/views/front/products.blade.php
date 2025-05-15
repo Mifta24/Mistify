@@ -3,9 +3,9 @@
     <div class="bg-light">
         <div class="container py-5">
             <div class="text-center">
-                <h1 class="display-4 fw-bold mb-3">Our Collections</h1>
-                <p class="lead text-muted mb-0">
-                    Discover our exclusive collection of luxury fragrances
+                <h1 class="display-4 fw-bold mb-3">Koleksi Kami</h1>
+                <p class="lead text-muted mb-0 fst-italic">
+                   Temukan koleksi wewangian mewah eksklusif kami
                 </p>
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="row g-4">
             @foreach ($products as $product)
                 <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm">
+                    <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden transition-all hover:shadow-xl hover:bg-light">
                         <div class="position-relative">
                             <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/150' }}"
                                 class="card-img-top" alt="{{ $product->name }}"
@@ -94,7 +94,7 @@
                             </div>
                         </div>
                         <div class="card-footer bg-white border-0 pt-0">
-                            <button class="btn btn-primary w-100 add-to-cart-btn"
+                            <button class="btn btn-outline-dark btn-lg w-100 add-to-cart-btn"
                                 data-product-id="{{ $product->id }}">
                                 <i class="bi bi-cart-plus me-1"></i> Add to Cart
                             </button>
@@ -109,6 +109,7 @@
             {{ $products->links() }}
         </div>
     </div>
+
     @push('styles')
         <style>
             .page-item.active .page-link {
@@ -336,4 +337,5 @@
             }
         </style>
     @endpush
+
 </x-app-layout>

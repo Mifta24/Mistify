@@ -242,7 +242,7 @@
         /* Products Section */
         .products-section {
             padding: 80px 0;
-            background-color: var(--light-color);
+            /* background-color: var(--light-color); */
         }
 
         .category-nav ul {

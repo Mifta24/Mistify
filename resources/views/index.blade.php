@@ -3,10 +3,10 @@
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <h1 class="display-4 fw-bold">We care about Fragrances</h1>
-            <p class="lead text-light mb-4">
-                Perfume is the art of creating a unique and lasting impression on the senses.
+            <p class="lead text-light mb-4 fst-italic">
+                "Parfum adalah seni menciptakan kesan unik dan tahan lama pada indra penciuman"
             </p>
-            <a href="#your-link" class="btn btn-custom">See more</a>
+            <a href="#" class="btn btn-custom">Lihat Lebih Banyak</a>
         </div>
     </div>
 
@@ -23,7 +23,7 @@
         <div class="row d-flex flex-column flex-lg-row align-items-center justify-content-center text-center text-lg-start">
             <!-- Left Text Section -->
             <div class="col-lg-4 px-5 mb-4 mb-lg-0">
-                <h1 class="display-4 fw-bold text-dark elegant-font">Essence</h1>
+                <h1 class="display-4 fw-bold text-dark elegant-font">Franada Parfum</h1>
                 <p class="lead text-secondary fs-4 fst-italic">Luxury Defined. One Drop at a Time.</p>
             </div>
 
@@ -54,16 +54,16 @@
 
             <!-- Right Text Section -->
             <div class="col-lg-4 px-5">
-                <h2 class="fw-semibold display-6 mb-3">Why Shop with Essence?</h2>
+                <h2 class="fw-semibold display-8 mb-3">Mengapa Berbelanja dengan Franada Parfum?</h2>
                 <p class="text-muted fs-5">Franada Parfum hadir untuk kamu yang cari parfum berkualitas tanpa harus keluar biaya mahal. Kami pilih aroma terbaik, pastikan ketahanan wanginya, dan selalu utamakan kepuasan pelanggan. Dengan koleksi lengkap dan pelayanan cepat, belanja parfum jadi lebih mudah dan menyenangkan di Franada Parfum.</p>
-                <a href="#" class="btn btn-outline-dark btn-lg rounded-pill px-5 py-2 mt-3 shadow-sm">Read More</a>
+                <a href="#" class="btn btn-outline-dark btn-lg rounded-pill px-5 py-2 mt-3 shadow-sm">Baca Lebih Banyak</a>
             </div>
         </div>
     </div>
 
     <div class="services-section container-3  mx-2">
         <!-- Title Section -->
-        <h1 class="text-center mb-5 large-text fw-bold text-dark">Our Services</h1>
+        <h1 class="text-center mb-5 large-text fw-bold text-dark">Pelayanan kami</h1>
 
         <!-- Services Cards Container -->
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
@@ -106,54 +106,50 @@
     </div>
 
     <div class="products-section container-4 mx-3">
-        <h1 class="big-text text-center">Our products</h1>
-        <p class="text-center mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-        <div class="category-nav">
-    <ul class="nav nav-pills justify-content-center mb-4" id="category-tabs">
-        <li class="nav-item">
-            <a href="{{ route('products.index') }}"
-               class="nav-link {{ !request('category') ? 'active' : '' }}">All</a>
-        </li>
-        @foreach ($categories as $category)
-            <li class="nav-item">
-                <a href="{{ route('products.index', ['category' => $category->id]) }}"
-                   class="nav-link {{ request('category') == $category->id ? 'active' : '' }}">
-                    {{ $category->name }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
-</div>
-
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-    @if (isset($products) && count($products) > 0)
-        @foreach ($products as $product)
-            <div class="col">
-                <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden transition-all hover:shadow-xl hover:bg-light">
-
-                        <img src="{{ asset('storage/' . $product->image) }}"
-                             class="img-fluid object-fit-cover" alt="Product image">
-
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{ $product->name }}</h5>
-                        <p class="card-text text-primary fw-semibold">Rp {{ number_format($product->price, 2) }}</p>
-                    </div>
-                </div>
+        <!-- Judul dan Tombol di atas -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+            <div class="w-100 text-center">
+                <h1 class="big-text">Produk best seller</h1>
+                <p class="mb-0">"Inilah parfum andalan yang sering jadi love at first scent. Populer, berkarakter, dan bikin kamu lebih memorable."</p>
             </div>
-        @endforeach
-    @else
-        <div class="col-12">
-            <div class="alert alert-warning text-center" role="alert">
-                No products available at the moment.
+            <div class="ms-auto mt-3 mt-md-0">
+                <a href="{{ route('products.index') }}" class="btn btn-outline-dark btn-lg rounded-pill px-4 py-1 mt-2 shadow-sm text-decoration-none">
+                    <i class="bi bi-arrow-right-circle"></i>
+                    <span>Lihat semua</span>
+                </a>
             </div>
         </div>
-    @endif
-</div>
 
+        <!-- Daftar Produk -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @if (isset($products) && count($products) > 0)
+                @foreach ($products as $product)
+                    <div class="col">
+                        <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden transition-all hover:shadow-xl hover:bg-light">
+                            <img src="{{ asset('storage/' . $product->image) }}"
+                                class="img-fluid object-fit-cover" alt="Product image">
+
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ $product->name }}</h5>
+                                <p class="card-text text-black fw-semibold">Rp {{ number_format($product->price, 2) }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="col-12">
+                    <div class="alert alert-warning text-center" role="alert">
+                        No products available at the moment.
+                    </div>
+                </div>
+            @endif
+        </div>
     </div>
 
+
+
     <div class="testimonial-section">
-        <h1 class="large-text text-center mb-5">What Our Customers Say</h1>
+        <h1 class="large-text text-center mb-5">Apa kata pelanggan kami?</h1>
         <div class="testimonial-carousel">
             @if (isset($testimonials) && count($testimonials) > 0)
             <div class="swiper testimonial-swiper">
