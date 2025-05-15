@@ -12,10 +12,14 @@ class FrontController extends Controller
 
     public function dashboard()
     {
-        // Provduct
-        $products = Product::with('category')
-            ->orderBy('created_at', 'desc')
-            ->take(4)
+        // Get best-selling products by counting order items
+        $products = Product::select('products.*')
+            ->join('order_items', 'products.id', '=', 'order_items.product_id')
+            ->selectRaw('products.*, SUM(order_items.quantity) as total_sold')
+            ->groupBy('products.id')
+            ->orderByDesc('total_sold')
+            ->with('category')
+            ->take(3)
             ->get();
         // Category
         $categories = Category::where('is_active', true)
