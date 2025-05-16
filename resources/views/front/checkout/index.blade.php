@@ -104,6 +104,7 @@
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">{{ $item['name'] }}</h6>
                                     <p class="text-muted small mb-0">Jumlah: {{ $item['quantity'] }}</p>
+                                    <p class="text-muted small mb-0">Ukuran: {{ $item['size'] }} ml</p>
                                     <strong class="text-primary">Rp {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</strong>
                                 </div>
                             </div>

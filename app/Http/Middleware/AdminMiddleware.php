@@ -17,7 +17,8 @@ class AdminMiddleware
                 ->body('You do not have permission to access the admin panel.')
                 ->send();
 
-            return redirect()->route('home');
+            return redirect()->route('dashboard')
+                ->with('error', 'You do not have permission to access the admin panel.');
         }
 
         return $next($request);

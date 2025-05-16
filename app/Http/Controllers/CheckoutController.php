@@ -97,14 +97,34 @@ class CheckoutController extends Controller
             ]);
             // Create order items and update stock
             foreach ($cart as $id => $item) {
-                $product = Product::findOrFail($id);
+                // Extract the actual product ID from the compound cart ID (e.g., "1-50" becomes 1)
+                $productId = explode('-', $id)[0];
+                $product = Product::findOrFail($productId);
+
+                if (isset($item['size']) && isset($product->sizes)) {
+                    // Look for the specific size's stock
+                    foreach ($product->sizes as $sizeItem) {
+                        if (is_array($sizeItem) && isset($sizeItem['size']) && $sizeItem['size'] == $item['size']) {
+                            $sizeStock = $sizeItem['stock'] ?? null;
+                            break;
+                        }
+                    }
+                }
+
+                // Check against size-specific stock if available, otherwise use product stock
+                $availableStock = $sizeStock !== null ? $sizeStock : $product->stock;
+
+                if ($availableStock < $item['quantity']) {
+                    throw new \Exception("Insufficient stock for {$product->name} (Size: {$item['size']}ml)");
+                }
 
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $id,
+                    'product_id' => $productId, // Use the extracted numeric product ID
                     'product_name' => $product->name,
-                    'quantity' => $item['quantity'],
                     'price' => $item['price'],
+                    'size' => $item['size'] ?? null,
+                    'quantity' => $item['quantity'],
                     'subtotal' => $item['price'] * $item['quantity']
                 ]);
 

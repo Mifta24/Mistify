@@ -60,6 +60,16 @@ class OrderItemResource extends Resource
 
                         Forms\Components\Section::make('Quantity & Subtotal')
                             ->schema([
+                                Forms\Components\TextInput::make('size')
+                                    ->required()
+                                    ->reactive()
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, Forms\Set $set) {
+                                        $product = \App\Models\Product::find($set('product_id'));
+                                        if ($product) {
+                                            $set('price', $product->price);
+                                        }
+                                    }),
                                 Forms\Components\TextInput::make('quantity')
                                     ->required()
                                     ->numeric()
@@ -97,7 +107,9 @@ class OrderItemResource extends Resource
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
-
+                Tables\Columns\TextColumn::make('size')
+                    ->sortable()
+                    ->suffix('ml'),
                 Tables\Columns\TextColumn::make('price')
                     ->money('IDR')
                     ->sortable(),
