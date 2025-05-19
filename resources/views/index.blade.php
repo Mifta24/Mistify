@@ -139,62 +139,66 @@
         </div>
 
         <!-- Daftar Produk Best Seller -->
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-3">
-            @if (isset($products) && count($products) > 0)
-                @foreach ($products as $product)
-                    <div class="col">
-                        <div
-                            class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden transition-all hover:shadow-xl hover:bg-light">
-                            <!-- Add Bestseller badge -->
-                            <div class="position-absolute top-0 end-0 m-3">
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 g-4">
+    @if (isset($products) && count($products) > 0)
+        @foreach ($products as $product)
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden position-relative bg-white transition-all" style="transition: all 0.3s ease-in-out;">
+                    <!-- Best Seller Badge -->
+                    <div class="position-absolute top-0 end-0 m-3">
                                 <div class="badge bg-danger fs-6 p-2 rounded-pill">Best Seller</div>
                             </div>
 
-                            <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
-                                <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid object-fit-cover"
-                                    style="height: 240px; width: 100%;" alt="{{ $product->name }}">
+                    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none">
+                        <img src="{{ asset('storage/' . $product->image) }}"
+                             alt="{{ $product->name }}"
+                             class="img-fluid object-fit-cover w-100"
+                             style="height: 400px; object-fit: cover; transition: transform 0.3s ease-in-out;"
+                             onmouseover="this.style.transform='scale(1.02)';"
+                             onmouseout="this.style.transform='scale(1)';">
 
-                                <div class="card-body text-center">
-                                    <h5 class="card-title text-dark">{{ $product->name }}</h5>
-                                    <p class="card-text text-black fw-semibold">Rp
-                                        {{ number_format($product->price, 0, ',', '.') }}</p>
+                        <div class="card-body text-center">
+                            <h5 class="card-title text-dark fw-semibold">{{ $product->name }}</h5>
+                            <p class="card-text text-primary fw-bold fs-5">
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
+                            </p>
 
-                                    <!-- Add sold count indicator -->
-                                    <div class="text-muted small mb-2">
-                                        <i class="bi bi-bag-check me-1"></i> Terjual {{ $product->total_sold ?? 0 }}+
-                                    </div>
+                            <div class="text-muted small">
+                                <i class="bi bi-bag-check me-1"></i> Terjual {{ $product->total_sold ?? 0 }}+
+                            </div>
 
-                                    <!-- Add quick action buttons -->
-                                    <div class="d-flex justify-content-center gap-2 mt-3">
-                                        <button class="btn btn-sm btn-outline-primary quick-view-btn"
-                                            data-product-id="{{ $product->id }}">
-                                            <i class="bi bi-eye"></i>
-                                        </button>
-                                        @auth
+                            <div class="d-flex justify-content-center gap-3 mt-3">
+                                <button class="btn btn-sm btn-outline-primary rounded-circle shadow-sm quick-view-btn"
+                                        data-product-id="{{ $product->id }}" title="Quick View">
+                                    <i class="bi bi-eye"></i>
+                                </button>
 
-                                            <button class="btn btn-sm btn-outline-success add-to-cart-btn"
-                                                data-product-id="{{ $product->id }}">
-                                                <i class="bi bi-cart-plus"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-danger add-to-wishlist-btn"
-                                                data-product-id="{{ $product->id }}">
-                                                <i class="bi bi-heart"></i>
-                                            </button>
-                                        @endauth
-                                    </div>
-                                </div>
-                            </a>
+                                @auth
+                                    <button class="btn btn-sm btn-outline-success rounded-circle shadow-sm add-to-cart-btn"
+                                            data-product-id="{{ $product->id }}" title="Tambah ke Keranjang">
+                                        <i class="bi bi-cart-plus"></i>
+                                    </button>
+
+                                    <button class="btn btn-sm btn-outline-danger rounded-circle shadow-sm add-to-wishlist-btn"
+                                            data-product-id="{{ $product->id }}" title="Favoritkan">
+                                        <i class="bi bi-heart"></i>
+                                    </button>
+                                @endauth
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-            @else
-                <div class="col-12">
-                    <div class="alert alert-warning text-center" role="alert">
-                        No products available at the moment.
-                    </div>
+                    </a>
                 </div>
-            @endif
+            </div>
+        @endforeach
+    @else
+        <div class="col-12">
+            <div class="alert alert-warning text-center rounded-4 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-circle me-2"></i>Produk belum tersedia untuk saat ini.
+            </div>
         </div>
+    @endif
+</div>
+
     </div>
 
 

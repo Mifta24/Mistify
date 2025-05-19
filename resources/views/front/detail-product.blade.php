@@ -2,10 +2,19 @@
 <x-app-layout>
     <div class="container py-5">
         <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('products.index') }}">Products</a></li>
-                <li class="breadcrumb-item active" aria-current="page">{{ $product->name }}</li>
+            <ol class="breadcrumb bg-light p-3 rounded shadow-sm">
+                <li class="breadcrumb-item d-flex align-items-center">
+                    <i class="bi bi-house-door me-1 text-primary"></i>
+                    <a href="{{ route('dashboard') }}" class="text-decoration-none text-primary">Home</a>
+                </li>
+                <li class="breadcrumb-item d-flex align-items-center">
+                    <i class="bi bi-box-seam me-1 text-secondary"></i>
+                    <a href="{{ route('products.index') }}" class="text-decoration-none text-secondary">Products</a>
+                </li>
+                <li class="breadcrumb-item active d-flex align-items-center text-dark" aria-current="page">
+                    <i class="bi bi-info-circle me-1"></i>
+                    {{ $product->name }}
+                </li>
             </ol>
         </nav>
 
@@ -103,7 +112,7 @@
             <!-- Product Info -->
             <div class="col-md-7">
                 <div class="ps-lg-4">
-                    <!-- Brand & Name -->
+                    <!-- Merek & Nama Produk -->
                     <div class="mb-3">
                         <div class="text-muted mb-1">{{ $product->brand }}</div>
                         <h1 class="h2 fw-bold mb-0">{{ $product->name }}</h1>
@@ -124,74 +133,64 @@
                             @endfor
                         </div>
                         <span class="ms-2 small text-muted">
-                            {{ $product->reviews->count() }} {{ Str::plural('review', $product->reviews->count()) }}
+                            {{ $product->reviews->count() }} {{ Str::plural('ulasan', $product->reviews->count()) }}
                         </span>
                     </div>
 
-                    <!-- Price -->
+                    <!-- Harga -->
                     <div class="mb-4">
-                        <h2 class="h3 fw-bold" id="selected-price">
+                        <h2 class="h3 fw-bold text-primary" id="selected-price">
                             Rp {{ number_format($product->price, 0, ',', '.') }}
                         </h2>
                     </div>
 
-                    <!-- Quick Specs -->
-                    <div class="d-flex flex-wrap gap-3 mb-4">
+                    <!-- Spesifikasi Singkat -->
+                    <div class="d-flex flex-wrap gap-3 mb-4 text-muted small">
                         @if ($product->gender)
                             <div class="spec-item">
-                                <span class="fw-medium">Gender:</span>
-                                <span>{{ $product->gender }}</span>
+                                <span class="fw-semibold">Gender:</span> {{ $product->gender }}
                             </div>
                         @endif
 
                         @if ($product->concentration)
                             <div class="spec-item">
-                                <span class="fw-medium">Type:</span>
-                                <span>{{ $product->concentration }}</span>
+                                <span class="fw-semibold">Tipe:</span> {{ $product->concentration }}
                             </div>
                         @endif
 
                         @if ($product->fragrance_family)
                             <div class="spec-item">
-                                <span class="fw-medium">Family:</span>
-                                <span>{{ $product->fragrance_family }}</span>
+                                <span class="fw-semibold">Keluarga Aroma:</span> {{ $product->fragrance_family }}
                             </div>
                         @endif
                     </div>
 
                     <hr class="my-4">
 
-                    <!-- Add to Cart Form -->
+                    <!-- Form Tambah ke Keranjang -->
                     <form id="addToCartForm">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-
-                        <!-- Size Selection -->
+                        <!-- Pilihan Ukuran -->
                         @if (isset($product->sizes) && !empty($product->sizes))
                             <div class="mb-4">
-                                <label class="form-label fw-medium">Size</label>
-                                <div class="size-options d-flex flex-wrap gap-2">
+                                <label class="form-label fw-semibold">Ukuran</label>
+                                <div class="d-flex flex-wrap gap-2">
                                     @foreach ($product->sizes as $sizeItem)
                                         @php
-                                            // Handle when sizes is an array of objects with size, price, stock properties
                                             if (is_array($sizeItem) || is_object($sizeItem)) {
                                                 $sizeItem = (array) $sizeItem;
                                                 $actualSize = $sizeItem['size'] ?? null;
                                                 $sizePrice = $sizeItem['price'] ?? $product->price;
                                                 $sizeStock = $sizeItem['stock'] ?? 0;
-                                            }
-                                            // If it's a simple key-value array
-                                            else {
+                                            } else {
                                                 $actualSize = $sizeItem;
                                                 $sizePrice = $product->price;
                                                 $sizeStock = $product->stock;
                                             }
 
-                                            // Skip if size is null/empty
-                                            if (empty($actualSize)) {
-                                                continue;
-                                            }
+                                            if (empty($actualSize)) continue;
                                         @endphp
                                         <div class="form-check form-option">
                                             <input class="form-check-input" type="radio" name="size"
@@ -199,14 +198,13 @@
                                                 data-price="{{ $sizePrice }}"
                                                 {{ $product->default_size == $actualSize ? 'checked' : '' }}
                                                 {{ $sizeStock <= 0 ? 'disabled' : '' }}>
-                                            <label
-                                                class="form-check-label size-label {{ $sizeStock <= 0 ? 'text-muted' : '' }}"
+                                            <label class="form-check-label size-label {{ $sizeStock <= 0 ? 'text-muted' : '' }}"
                                                 for="size-{{ $actualSize }}">
                                                 {{ $actualSize }}ml
                                                 <div class="small">
                                                     Rp {{ number_format($sizePrice, 0, ',', '.') }}
                                                     @if ($sizeStock <= 0)
-                                                        <span class="text-danger">(Out of stock)</span>
+                                                        <span class="text-danger">(Stok habis)</span>
                                                     @endif
                                                 </div>
                                             </label>
@@ -218,45 +216,43 @@
                             </div>
                         @endif
 
-                        <!-- Quantity -->
+                        <!-- Kuantitas -->
                         <div class="mb-4">
-                            <label class="form-label fw-medium">Quantity</label>
+                            <label class="form-label fw-semibold">Jumlah</label>
                             <div class="input-group quantity-selector" style="width: 140px;">
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                    id="decrease-qty">-</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="decrease-qty">-</button>
                                 <input type="number" class="form-control text-center" name="quantity" id="quantity"
                                     value="1" min="1" max="{{ $product->stock }}">
-                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                    id="increase-qty">+</button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="increase-qty">+</button>
                             </div>
                         </div>
 
-                        <!-- Action Buttons -->
+                        <!-- Tombol Aksi -->
                         <div class="d-flex gap-2 mb-4">
-                            <button type="button" id="add-to-cart-btn" class="btn btn-primary flex-grow-1 py-2"
-                                data-product-id="{{ $product->id }}">
-                                <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                            <button type="button" id="add-to-cart-btn" class="btn btn-primary w-100 py-2"
+                                    data-product-id="{{ $product->id }}">
+                                <i class="bi bi-cart-plus me-1"></i> Tambah ke Keranjang
                             </button>
                         </div>
                     </form>
 
-                    <!-- Description -->
+                    <!-- Deskripsi Produk -->
                     <div class="mt-4">
-                        <h5 class="fw-bold mb-3">Description</h5>
-                        <div class="product-description">
+                        <h5 class="fw-bold mb-3">Deskripsi Produk</h5>
+                        <div class="product-description text-muted">
                             {!! $product->description !!}
                         </div>
                     </div>
 
-                    <!-- Shipping Info -->
+                    <!-- Info Pengiriman -->
                     <div class="mt-4 pt-3 border-top">
                         <div class="row g-3">
                             <div class="col-sm-6">
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-truck fs-4 me-2 text-primary"></i>
                                     <div>
-                                        <div class="fw-medium">Free Shipping</div>
-                                        <div class="small text-muted">For orders over Rp 300.000</div>
+                                        <div class="fw-semibold">Gratis Ongkir</div>
+                                        <div class="small text-muted">Untuk pembelian di atas Rp 300.000</div>
                                     </div>
                                 </div>
                             </div>
@@ -264,8 +260,8 @@
                                 <div class="d-flex align-items-center">
                                     <i class="bi bi-shield-check fs-4 me-2 text-primary"></i>
                                     <div>
-                                        <div class="fw-medium">100% Authentic</div>
-                                        <div class="small text-muted">Guaranteed genuine products</div>
+                                        <div class="fw-semibold">100% Otentik</div>
+                                        <div class="small text-muted">Produk dijamin asli & terpercaya</div>
                                     </div>
                                 </div>
                             </div>

@@ -1,29 +1,44 @@
 <x-app-layout>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body p-4">
-                        <h4 class="mb-4">Payment Instructions</h4>
-                        <div class="alert alert-info">
-                            <h5 class="alert-heading">Bank Transfer Details</h5>
-                            <p class="mb-1"><strong>Bank:</strong> {{ $bankDetails['bank_name'] }}</p>
-                            <p class="mb-1"><strong>Account Number:</strong> {{ $bankDetails['account_number'] }}</p>
-                            <p class="mb-1"><strong>Account Name:</strong> {{ $bankDetails['account_name'] }}</p>
-                            <p class="mb-0"><strong>Amount:</strong> Rp {{ number_format($bankDetails['amount'], 0, ',', '.') }}</p>
-                        </div>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-5">
 
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle me-2"></i>
-                            Please complete your payment within 24 hours
-                        </div>
-
-                        <a href="{{ route('orders.show', $order->order_number) }}" class="btn btn-primary">
-                            View Order Details
-                        </a>
+                    <div class="mb-4 text-center">
+                        <h4 class="fw-semibold mb-1">Instruksi Pembayaran</h4>
+                        <p class="text-muted small">Silakan transfer sesuai detail di bawah ini</p>
                     </div>
+
+                    <!-- Payment Details -->
+                    <div class="bg-light p-4 rounded-4 mb-4 border border-dashed">
+                        <h6 class="fw-bold mb-3 d-flex align-items-center">
+                            <i class="bi bi-bank me-2 text-primary fs-5"></i>
+                            Detail Transfer Bank
+                        </h6>
+                        <div class="mb-2 small"><strong>Bank:</strong> {{ $bankDetails['bank_name'] }}</div>
+                        <div class="mb-2 small"><strong>No Rekening:</strong> <span class="font-monospace">{{ $bankDetails['account_number'] }}</span></div>
+                        <div class="mb-2 small"><strong>Atas Nama:</strong> {{ $bankDetails['account_name'] }}</div>
+                        <div class="mb-0 small"><strong>Total Transfer:</strong> <span class="text-primary fw-bold">Rp {{ number_format($bankDetails['amount'], 0, ',', '.') }}</span></div>
+                    </div>
+
+                    <!-- Alert Info -->
+                    <div class="alert alert-warning d-flex align-items-start gap-3 small mb-4">
+                        <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                        <div>
+                            Harap selesaikan pembayaran dalam waktu <strong>24 jam</strong> untuk menghindari pembatalan otomatis.
+                        </div>
+                    </div>
+
+                    <!-- CTA -->
+                    <a href="{{ route('orders.show', $order->order_number) }}" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                        <i class="bi bi-receipt-cutoff"></i>
+                        <span>Lihat Detail Pesanan</span>
+                    </a>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 </x-app-layout>

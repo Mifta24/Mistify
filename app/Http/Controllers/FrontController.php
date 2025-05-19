@@ -13,12 +13,7 @@ class FrontController extends Controller
     public function dashboard()
     {
         // Get best-selling products by counting order items
-        $products = Product::select('products.*')
-            ->join('order_items', 'products.id', '=', 'order_items.product_id')
-            ->selectRaw('products.*, SUM(order_items.quantity) as total_sold')
-            ->groupBy('products.id')
-            ->orderByDesc('total_sold')
-            ->with('category')
+        $products = Product::where('is_bestseller', true)
             ->take(3)
             ->get();
         // Category
@@ -136,8 +131,8 @@ class FrontController extends Controller
     {
         // Start with basic query excluding the current product
         $baseQuery = Product::where('id', '!=', $product->id)
-                    ->where('is_active', true)
-                    ->with('category');
+            ->where('is_active', true)
+            ->with('category');
 
         // Collection to store our results
         $similarProducts = collect();
