@@ -248,4 +248,69 @@ class PaymentController extends Controller
 
         return view('front.payment.instructions', compact('order', 'bankDetails'));
     }
+
+    public function showUploadForm($orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->where('user_id', auth()->id())
+            ->where('payment_status', Order::PAYMENT_UNPAID)
+            ->firstOrFail();
+
+        $payment = Payment::where('order_id', $order->id)->firstOrFail();
+
+        return view('front.payment.upload', compact('order', 'payment'));
+    }
+
+    /**
+     * Process the payment proof upload
+     */
+    public function confirmPayment(Request $request, $orderNumber)
+    {
+        $order = Order::where('order_number', $orderNumber)
+            ->where('user_id', auth()->id())
+            ->where('payment_status', Order::PAYMENT_UNPAID)
+            ->firstOrFail();
+
+        $payment = Payment::where('order_id', $order->id)->firstOrFail();
+
+        // Validate form input
+        $request->validate([
+            'payment_proof' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'payment_date' => 'required|date|before_or_equal:today',
+            'amount' => 'required|numeric|min:' . ($payment->amount * 0.98), // Allow small difference (2%)
+        ]);
+
+        // Additional validations based on payment method
+        if ($payment->payment_method === Payment::METHOD_BANK_TRANSFER) {
+            $request->validate([
+                'bank_name' => 'required|string|max:50',
+                'account_number' => 'required|string|max:30',
+                'account_name' => 'required|string|max:100',
+            ]);
+        }
+
+        // Store payment proof
+        if ($request->hasFile('payment_proof')) {
+            $proofPath = $request->file('payment_proof')->store('payment_proofs', 'public');
+        }
+
+        // Update payment data
+        $payment->update([
+            'status' => Payment::STATUS_PROCESSING,
+            'payment_proof' => $proofPath ?? null,
+            'bank_name' => $request->bank_name,
+            'account_number' => $request->account_number,
+            'account_name' => $request->account_name,
+            'notes' => $request->notes,
+        ]);
+
+        // Update order status
+        $order->update([
+            'status' => Order::STATUS_PROCESSING,
+            'payment_status' => 'processing'
+        ]);
+
+        return redirect()->route('orders.show', $order->order_number)
+            ->with('success', 'Bukti pembayaran berhasil dikirim. Tim kami akan memverifikasi pembayaran Anda dalam 1x24 jam kerja.');
+    }
 }

@@ -1,3 +1,4 @@
+<!-- filepath: c:\laragon\www\Mistify\resources\views\front\payment\instructions.blade.php -->
 <x-app-layout>
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -30,8 +31,25 @@
                         </div>
                     </div>
 
-                    <!-- CTA -->
-                    <a href="{{ route('orders.show', $order->order_number) }}" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                    <!-- Payment Steps -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold mb-3">Langkah Pembayaran:</h6>
+                        <ol class="ps-3 small">
+                            <li class="mb-2">Transfer sesuai jumlah yang tertera ke rekening di atas</li>
+                            <li class="mb-2">Simpan bukti transfer (screenshot/foto)</li>
+                            <li class="mb-2">Upload bukti transfer melalui tombol di bawah</li>
+                            <li class="mb-2">Pembayaran akan diverifikasi dalam 1x24 jam kerja</li>
+                        </ol>
+                    </div>
+
+                    <!-- Upload Button -->
+                    <a href="{{ route('payment.upload', $order->order_number) }}" class="btn btn-success w-100 d-flex justify-content-center align-items-center gap-2 mb-3">
+                        <i class="bi bi-upload"></i>
+                        <span>Upload Bukti Pembayaran</span>
+                    </a>
+
+                    <!-- Order Details Button -->
+                    <a href="{{ route('orders.show', $order->order_number) }}" class="btn btn-outline-primary w-100 d-flex justify-content-center align-items-center gap-2">
                         <i class="bi bi-receipt-cutoff"></i>
                         <span>Lihat Detail Pesanan</span>
                     </a>
