@@ -3,9 +3,9 @@
     <div class="bg-light">
         <div class="container py-5">
             <div class="text-center">
-                <h1 class="display-4 fw-bold mb-3">Our Collections</h1>
-                <p class="lead text-muted mb-0">
-                    Discover our exclusive collection of luxury fragrances
+                <h1 class="display-4 fw-bold mb-3">Koleksi Kami</h1>
+                <p class="lead text-muted mb-0 fst-italic">
+                    Temukan koleksi wewangian mewah eksklusif kami
                 </p>
             </div>
         </div>
@@ -37,16 +37,16 @@
                         @endforeach
                     </select>
                     <select class="form-select" id="sortFilter" style="width: 200px;">
-                    <option value="">Sort By</option>
-                    <option value="price_asc" {{ request()->get('sort') == 'price_asc' ? 'selected' : '' }}>
-                        Price: Low to High
-                    </option>
-                    <option value="price_desc" {{ request()->get('sort') == 'price_desc' ? 'selected' : '' }}>
-                        Price: High to Low
-                    </option>
-                    <option value="newest" {{ request()->get('sort') == 'newest' ? 'selected' : '' }}>
-                        Newest First
-                    </option>
+                        <option value="">Sort By</option>
+                        <option value="price_asc" {{ request()->get('sort') == 'price_asc' ? 'selected' : '' }}>
+                            Price: Low to High
+                        </option>
+                        <option value="price_desc" {{ request()->get('sort') == 'price_desc' ? 'selected' : '' }}>
+                            Price: High to Low
+                        </option>
+                        <option value="newest" {{ request()->get('sort') == 'newest' ? 'selected' : '' }}>
+                            Newest First
+                        </option>
                     </select>
                     @if (request()->has('category') || request()->has('sort') || request()->has('search'))
                         <button type="button" id="resetFilters" class="btn btn-outline-secondary">
@@ -63,7 +63,8 @@
         <div class="row g-4">
             @foreach ($products as $product)
                 <div class="col-6 col-md-4 col-lg-3">
-                    <div class="card h-100 border-0 shadow-sm">
+                    <div
+                        class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden transition-all hover:shadow-xl hover:bg-light">
                         <div class="position-relative">
                             <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/150' }}"
                                 class="card-img-top" alt="{{ $product->name }}"
@@ -93,12 +94,14 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="card-footer bg-white border-0 pt-0">
-                            <button class="btn btn-primary w-100 add-to-cart-btn"
-                                data-product-id="{{ $product->id }}">
-                                <i class="bi bi-cart-plus me-1"></i> Add to Cart
-                            </button>
-                        </div>
+                        @auth
+                            <div class="card-footer bg-white border-0 pt-0">
+                                <button class="btn btn-outline-dark btn-lg w-100 add-to-cart-btn"
+                                    data-product-id="{{ $product->id }}">
+                                    <i class="bi bi-cart-plus me-1"></i> Add to Cart
+                                </button>
+                            </div>
+                        @endauth
                     </div>
                 </div>
             @endforeach
@@ -109,6 +112,7 @@
             {{ $products->links() }}
         </div>
     </div>
+
     @push('styles')
         <style>
             .page-item.active .page-link {
@@ -336,4 +340,5 @@
             }
         </style>
     @endpush
+
 </x-app-layout>

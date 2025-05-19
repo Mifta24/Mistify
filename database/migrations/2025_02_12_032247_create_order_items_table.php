@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('product_name');  // Snapshot dari nama produk
             $table->decimal('price', 10, 2);  // Snapshot dari harga produk
             $table->integer('quantity');
+            $table->string('size')->nullable();  // Optional size field
             $table->decimal('subtotal', 10, 2);  // price * quantity
             $table->timestamps();
         });

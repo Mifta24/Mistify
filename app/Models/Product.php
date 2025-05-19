@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,12 +14,27 @@ class Product extends Model
         'image',
         'price',
         'stock',
+        'sizes',
+        'default_size',
+        'brand',
+        'concentration',
+        'scent_notes',
+        'gender',
+        'fragrance_family',
+        'is_featured',
+        'is_new',
+        'is_bestseller',
+        'is_active',
         'category_id'
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'stock' => 'integer'
+        'sizes' => 'array',
+        'scent_notes' => 'array',
+        'is_active' => 'boolean',
+        'is_featured' => 'boolean',
+        'is_new' => 'boolean',
+        'is_bestseller' => 'boolean'
     ];
 
     // Relationships
@@ -61,6 +77,22 @@ class Product extends Model
     }
 
     // Helper Methods
+
+    // Helper methods for sizes
+    public function getPriceForSize($size)
+    {
+        if (isset($this->sizes[$size])) {
+            return $this->sizes[$size];
+        }
+
+        return $this->price; // Default price
+    }
+
+    public function getAvailableSizes()
+    {
+        return array_keys($this->sizes ?: []);
+    }
+    
     public function hasStock($quantity = 1)
     {
         return $this->stock >= $quantity;

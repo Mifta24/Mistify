@@ -118,13 +118,50 @@
 
         /* Hero Section */
         .hero-section {
-            background-color: #212529;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            padding: 80px 0;
-            align-items: center;
-        }
+                position: relative;
+                background-image: url('images/headerhome.jpg'); /* ganti dengan URL gambar kamu */
+                background-size: cover;
+                background-position: center;
+                height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+
+            .hero-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* dark overlay */
+                z-index: 1;
+            }
+
+            .hero-content {
+                position: relative;
+                z-index: 2;
+                text-align: center;
+                max-width: 800px;
+                padding: 2rem;
+            }
+
+            .btn-custom {
+                background-color: transparent;
+                color: #ffffff;
+                border: 2px solid #ffffff;
+                padding: 0.75rem 1.5rem;
+                font-weight: 500;
+                transition: all 0.3s ease;
+                border-radius: 0.25rem;
+            }
+
+            .btn-custom:hover {
+                background-color: #e0e0e0; /* abu-abu terang saat hover */
+                color: #000; /* teks jadi hitam biar terbaca di bg abu */
+                border-color: #e0e0e0;
+            }
 
 
         #image-container-1 {
@@ -133,6 +170,21 @@
             height: 500px;
             border-radius: 10px;
         }
+
+                /* Brand Section */
+
+        .custom-shape-image-wrapper {
+        clip-path: polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%);
+        overflow: hidden;
+        border-radius: 1rem;
+        }
+
+        .custom-shape-image {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+}
+
 
         /* Brand Section */
         .brand-section {
@@ -190,7 +242,7 @@
         /* Products Section */
         .products-section {
             padding: 80px 0;
-            background-color: var(--light-color);
+            /* background-color: var(--light-color); */
         }
 
         .category-nav ul {
@@ -448,10 +500,10 @@
                     Saturday: 10.00 - 19.00
                 </p>
                 <div id="social-logos">
-                    <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" loading="lazy">
-                    <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" loading="lazy">
-                    <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" loading="lazy">
-                    <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" loading="lazy">
+                    <img src="{{ asset('logos/facebook.png') }}" alt="Facebook" >
+                    <img src="{{ asset('logos/instagram.png') }}" alt="Instagram" >
+                    <img src="{{ asset('logos/twitter.png') }}" alt="Twitter" >
+                    <img src="{{ asset('logos/pinterest.png') }}" alt="Pinterest" >
                 </div>
             </div>
             <div>

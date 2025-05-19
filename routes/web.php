@@ -90,6 +90,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{order:order_number}/finish', 'handleFinish')->name('finish');
             Route::get('/{order:order_number}/error', 'handleError')->name('error');
             Route::get('/{order:order_number}/cancel', 'handleCancel')->name('cancel');
+
+
+            // Manual payment verification routes
+            Route::get('/payment/{orderNumber}/upload', [PaymentController::class, 'showUploadForm'])->name('upload');
+            Route::post('/payment/{orderNumber}/confirm', [PaymentController::class, 'confirmPayment'])->name('confirm');
         });
 
 

@@ -1,155 +1,128 @@
 <x-app-layout>
-    <!-- ...existing header and progress steps... -->
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
 
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <!-- ...existing alerts and order summary... -->
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
 
-                <!-- Payment Methods -->
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="card-title mb-0">Select Payment Method</h5>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('payment.process', $order->order_number) }}" method="POST" id="paymentForm">
-                            @csrf
-                            <div class="list-group mb-4">
-                                <!-- Bank Transfer Option -->
-                                <label class="list-group-item d-flex gap-3">
-                                    <input class="form-check-input" type="radio" name="payment_method"
-                                           value="bank_transfer" required checked>
-                                    <span>
-                                        <i class="bi bi-bank me-2"></i>
-                                        Manual Bank Transfer
-                                        <small class="d-block text-muted">
-                                            Transfer manually to our bank account
-                                        </small>
-                                    </span>
-                                </label>
+                    <h4 class="mb-2 fw-semibold">Pilih Metode Pembayaran</h4>
+                    <p class="text-muted mb-4">Lengkapi transaksi Anda dengan memilih metode pembayaran yang diinginkan.</p>
 
-                                <!-- E-Wallet & Virtual Account Option -->
-                                <label class="list-group-item d-flex gap-3">
-                                    <input class="form-check-input" type="radio" name="payment_method"
-                                           value="e_wallet" required>
-                                    <span>
-                                        <i class="bi bi-wallet2 me-2"></i>
-                                        E-Wallet & Virtual Account
-                                        <small class="d-block text-muted">
-                                            GoPay, ShopeePay, QRIS, Virtual Account (BCA, BNI, BRI, Mandiri)
-                                        </small>
-                                    </span>
-                                </label>
-                            </div>
+                    <form action="{{ route('payment.process', $order->order_number) }}" method="POST" id="paymentForm">
+                        @csrf
 
-                            <!-- Manual Bank Transfer Details -->
-                            <div id="bankDetails" class="card bg-light border-0 mb-4">
-                                <div class="card-body">
-                                    <h6 class="card-title mb-3">Bank Account Details</h6>
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><strong>Bank Name</strong></p>
-                                            <p class="mb-0">Bank Central Asia (BCA)</p>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <p class="mb-1"><strong>Account Number</strong></p>
-                                            <p class="mb-0 font-monospace">1234567890</p>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="mb-1"><strong>Account Name</strong></p>
-                                            <p class="mb-0">PT Mistify Indonesia</p>
-                                        </div>
-                                        <div class="col-12">
-                                            <p class="mb-1"><strong>Transfer Amount</strong></p>
-                                            <p class="mb-0 text-primary fw-bold">
-                                                Rp {{ number_format($order->total_price, 0, ',', '.') }}
-                                            </p>
-                                        </div>
+                        <div class="d-grid gap-3 mb-4">
+                            <!-- Bank Transfer -->
+                            <label class="payment-method card p-4 border border-light-subtle rounded-4 shadow-sm transition position-relative">
+                                <input type="radio" name="payment_method" value="bank_transfer" class="position-absolute top-0 end-0 m-3 form-check-input" checked required>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                        <i class="bi bi-bank fs-4"></i>
                                     </div>
-                                    <div class="alert alert-warning mt-3 mb-0">
-                                        <div class="d-flex gap-2">
-                                            <i class="bi bi-exclamation-triangle"></i>
-                                            <div>
-                                                <strong>Important:</strong>
-                                                <p class="mb-0">Please complete your payment within 24 hours to avoid order cancellation.</p>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <div class="fw-semibold">Transfer Bank Manual</div>
+                                        <div class="text-muted small">Transfer secara manual ke rekening kami.</div>
                                     </div>
                                 </div>
-                            </div>
+                            </label>
 
-                            <!-- E-Wallet & Virtual Account Details -->
-                            <div id="walletDetails" class="card bg-light border-0 mb-4" style="display: none;">
-                                <div class="card-body text-center">
-                                    <h6 class="card-title mb-3">Online Payment</h6>
-                                    <p class="mb-3">You will be redirected to our payment gateway to complete your payment.</p>
-                                    <div class="row g-3 justify-content-center mb-4">
-                                        <div class="col-auto">
-                                            <img src="{{ asset('images/payment/gopay.png') }}" alt="GoPay" height="30">
-                                        </div>
-                                        <div class="col-auto">
-                                            <img src="{{ asset('images/payment/shopeepay.png') }}" alt="ShopeePay" height="30">
-                                        </div>
-                                        <div class="col-auto">
-                                            <img src="{{ asset('images/payment/qris.png') }}" alt="QRIS" height="30">
-                                        </div>
+                            <!-- E-Wallet -->
+                            <label class="payment-method card p-4 border border-light-subtle rounded-4 shadow-sm transition position-relative">
+                                <input type="radio" name="payment_method" value="e_wallet" class="position-absolute top-0 end-0 m-3 form-check-input" required>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="icon bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                                        <i class="bi bi-wallet2 fs-4"></i>
                                     </div>
-                                    <div class="alert alert-info mb-0">
-                                        <div class="d-flex gap-2">
-                                            <i class="bi bi-info-circle"></i>
-                                            <div>
-                                                <strong>Note:</strong>
-                                                <p class="mb-0">You can also pay using Virtual Account from various banks.</p>
-                                            </div>
-                                        </div>
+                                    <div>
+                                        <div class="fw-semibold">E-Wallet & Virtual Account</div>
+                                        <div class="text-muted small">Bayar pakai GoPay, ShopeePay, QRIS, atau VA.</div>
                                     </div>
                                 </div>
-                            </div>
+                            </label>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary w-100" id="submitBtn">
-                                <span class="spinner-border spinner-border-sm d-none me-2" role="status"></span>
-                                Continue to Payment
-                                <i class="bi bi-arrow-right ms-2"></i>
-                            </button>
-                        </form>
-                    </div>
+                        <!-- Transfer Details -->
+                        <div id="bankDetails" class="bg-body-tertiary p-4 rounded-4 mb-4 fade show">
+                            <h6 class="fw-semibold mb-3">Informasi Rekening</h6>
+                            <div class="mb-2 small"><strong>Bank:</strong> Bank Central Asia (BCA)</div>
+                            <div class="mb-2 small"><strong>No Rekening:</strong> <span class="font-monospace">1234567890</span></div>
+                            <div class="mb-2 small"><strong>Atas Nama:</strong> PT Mistify Indonesia</div>
+                            <div class="mb-2 small"><strong>Total Transfer:</strong> <span class="text-primary fw-bold">Rp {{ number_format($order->total_price, 0, ',', '.') }}</span></div>
+
+                            <div class="alert alert-warning d-flex align-items-center gap-2 mt-3 mb-0">
+                                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                                <div class="small">
+                                    Selesaikan pembayaran dalam 24 jam untuk menghindari pembatalan pesanan.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- E-Wallet Details -->
+                        <div id="walletDetails" class="bg-body-tertiary p-4 rounded-4 mb-4 d-none fade show text-center">
+                            <h6 class="fw-semibold mb-3">Pembayaran Otomatis</h6>
+                            <p class="text-muted small">Anda akan diarahkan ke payment gateway kami.</p>
+                            <div class="d-flex justify-content-center gap-3 mb-3">
+                                <img src="{{ asset('images/payment/gopay.png') }}" alt="GoPay" height="32">
+                                <img src="{{ asset('images/payment/shopeepay.png') }}" alt="ShopeePay" height="32">
+                                <img src="{{ asset('images/payment/qris.png') }}" alt="QRIS" height="32">
+                            </div>
+                            <div class="alert alert-info d-flex align-items-center gap-2 small mb-0">
+                                <i class="bi bi-info-circle-fill fs-5"></i>
+                                <div>
+                                    Bisa juga bayar via VA (BCA, BNI, Mandiri, dll).
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2" id="submitBtn">
+                            <span class="spinner-border spinner-border-sm d-none" role="status"></span>
+                            <span class="btn-text">Lanjut ke Pembayaran</span>
+                            <i class="bi bi-arrow-right-circle"></i>
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('paymentForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const spinner = submitBtn.querySelector('.spinner-border');
-            const bankDetails = document.getElementById('bankDetails');
-            const walletDetails = document.getElementById('walletDetails');
-            const paymentMethods = document.getElementsByName('payment_method');
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('paymentForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner = submitBtn.querySelector('.spinner-border');
+        const btnText = submitBtn.querySelector('.btn-text');
+        const bankDetails = document.getElementById('bankDetails');
+        const walletDetails = document.getElementById('walletDetails');
+        const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
 
-            // Handle payment method change
-            paymentMethods.forEach(method => {
-                method.addEventListener('change', function() {
-                    if (this.value === 'bank_transfer') {
-                        bankDetails.style.display = 'block';
-                        walletDetails.style.display = 'none';
-                        submitBtn.textContent = 'Confirm Payment';
-                    } else {
-                        bankDetails.style.display = 'none';
-                        walletDetails.style.display = 'block';
-                        submitBtn.textContent = 'Continue to Payment Gateway';
-                    }
-                });
-            });
+        function toggleDetails() {
+            const selected = document.querySelector('input[name="payment_method"]:checked').value;
+            if (selected === 'bank_transfer') {
+                bankDetails.classList.remove('d-none');
+                walletDetails.classList.add('d-none');
+                btnText.textContent = 'Konfirmasi Pembayaran';
+            } else {
+                bankDetails.classList.add('d-none');
+                walletDetails.classList.remove('d-none');
+                btnText.textContent = 'Lanjut ke Pembayaran';
+            }
+        }
 
-            // Handle form submission
-            form.addEventListener('submit', function() {
-                submitBtn.disabled = true;
-                spinner.classList.remove('d-none');
-                submitBtn.querySelector('.bi-arrow-right').classList.add('d-none');
-            });
+        paymentOptions.forEach(option => {
+            option.addEventListener('change', toggleDetails);
         });
-    </script>
-    @endpush
+
+        toggleDetails(); // initial state
+
+        form.addEventListener('submit', function () {
+            submitBtn.disabled = true;
+            spinner.classList.remove('d-none');
+        });
+    });
+</script>
+@endpush
 </x-app-layout>
