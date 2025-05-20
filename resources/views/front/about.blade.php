@@ -29,7 +29,7 @@
     </section>
 
     {{-- Brand Values --}}
-    <section class="py-5">
+    {{-- <section class="py-5">
         <div class="container-lg text-center">
             <h2 class="fw-bold mb-3">Nilai-nilai Kami</h2>
             <p class="text-muted mb-4">Luxury Defined. One Drop at a Time.</p>
@@ -38,7 +38,7 @@
                 Di Franada Parfum, kami percaya bahwa sebuah parfum bukan hanya tentang aroma, tetapi juga tentang ekspresi diri dan pengalaman yang tak terlupakan.
             </p>
         </div>
-    </section>
+    </section> --}}
 
     {{-- Vision & Mission --}}
     <section class="py-5 bg-light">

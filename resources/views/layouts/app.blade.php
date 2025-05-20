@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Essence - Premium Perfumes</title>
+    <title>Franada Parfume - Premium Perfumes</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/style/styles.css') }}">
@@ -485,12 +485,12 @@
 
         {{-- Footer --}}
         <footer id="footer">
-            <div>
-                <h1 class="big-text">Essence</h1>
+            <div >
+                <h1 class="big-text">Franada Parfume</h1>
                 <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Illo architecto ut veritatis illum
                     quaerat. Ea similique harum repellat excepturi! Consequuntur iusto deserunt accusantium tempore
                     ullam.</p>
-                <p>&copy; 2024 Essence - All rights Reserved</p>
+                <p>&copy; 2025 Mistify - All rights Reserved</p>
 
             </div>
             <div>
@@ -508,9 +508,9 @@
             </div>
             <div>
                 <h2 class="big-text">Contact Us </h2>
-                <p>Tel: (+12) 345 678 910</p>
-                <p>Email: info@essence.com</p>
-                <p>Address: 12345 Street Name, City Name, Country</p>
+                <p>Tel: (+62) 812 8719 5398</p>
+                <p>Email: franadaparfume@gmail.com</p>
+                <p>Address: Pondok Makmur Blok CS 4, Jl. Raya Kutabumi Blok CD2 No.15, Kuta Baru, Ps. Kemis, Tangerang, Banten 15560</p>
 
             </div>
         </footer>
