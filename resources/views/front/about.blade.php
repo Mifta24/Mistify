@@ -1,44 +1,42 @@
 <x-app-layout>
-    {{-- Hero Section --}}
-    <section class="py-5 text-dark" >
-        <div class="container-lg text-center">
-            <h1 class="display-4 fw-bold mb-3">Tentang Kami</h1>
-            <p class="lead">Temukan perjalanan kami dalam menghadirkan aroma terbaik untuk mempercantik momen hidup Anda.</p>
-        </div>
-    </section>
+{{-- Our Story Section --}}
+<section class="py-5">
+    <div class="container-lg">
+        <h2 class="text-center fw-bold mb-5">Our Story</h2>
 
-    {{-- About Section --}}
-    <section class="py-5 bg-light">
-        <div class="container">
-            <div class="row gx-2 align-items-center">
-                <div class="col-md-5">
-                    <img src="{{ asset('images/tim/koleksiparfum.webp') }}" class="img-fluid rounded shadow" alt="Koleksi Parfum" style="object-fit: cover; max-height: 400px;">
-                </div>
-                <div class="col-md-7">
-                    <h2 class="fw-bold mb-3">Selamat Datang di <span class="text-secondary">Franada Parfum</span></h2>
-                    <p class="text-muted">
-                        Kami adalah toko parfum terdepan yang menyediakan berbagai macam parfum berkualitas dengan aroma yang elegan dan tahan lama.
-                    </p>
-                    <p class="text-muted">
-                        Setiap produk yang kami tawarkan telah melalui kurasi ketat untuk memastikan hanya parfum dengan kualitas terbaik yang sampai ke tangan Anda.
-                    </p>
-                    <a href="#" class="btn btn-outline-dark mt-3 px-4">Pelajari Lebih Lanjut</a>
-                </div>
+        {{-- Section 1: Text Left, Image Right --}}
+        <div class="row align-items-center mb-5">
+            <div class="col-md-6 order-md-1">
+                <p class="text-muted">
+                    Tangerang, 2020 menjadi awal dari perjalanan Toko Franada Parfum. Berawal dari ketertarikan kami terhadap dunia wewangian dan keinginan untuk menghadirkan parfum berkualitas dengan harga yang terjangkau, lahirlah toko fisik pertama kami di pusat kota Tangerang.
+                </p>
+                <p class="text-muted">
+                    Didirikan oleh Bapak Franada, toko ini dibangun dari nol dengan semangat untuk menghadirkan pengalaman belanja parfum yang berbeda — lengkap, nyaman, dan terpercaya. Awalnya kami hanya menjual beberapa varian parfum refill, namun seiring dengan meningkatnya kepercayaan pelanggan, koleksi kami terus berkembang hingga mencakup berbagai jenis parfum original, inspired, hingga produk eksklusif pilihan.
+                </p>
+            </div>
+            <div class="col-md-6 order-md-2">
+                <img src="{{ asset('images/journey.jpg') }}" class="img-fluid rounded shadow" alt="Foto toko" style="object-fit: cover; height: 100%; max-height: 400px; width: 100%;">
             </div>
         </div>
-    </section>
 
-    {{-- Brand Values --}}
-    {{-- <section class="py-5">
-        <div class="container-lg text-center">
-            <h2 class="fw-bold mb-3">Nilai-nilai Kami</h2>
-            <p class="text-muted mb-4">Luxury Defined. One Drop at a Time.</p>
-            <img src="{{ asset('images/tim/k2.jpg') }}" class="img-fluid rounded shadow mb-4" style="max-height: 400px;" alt="Brand Value Image">
-            <p class="text-muted mx-auto" style="max-width: 700px;">
-                Di Franada Parfum, kami percaya bahwa sebuah parfum bukan hanya tentang aroma, tetapi juga tentang ekspresi diri dan pengalaman yang tak terlupakan.
-            </p>
+        {{-- Section 2: Image Left, Text Right --}}
+        <div class="row align-items-center">
+            <div class="col-md-6 order-md-1">
+                <img src="{{ asset('images/perfume-background.jpg') }}" class="img-fluid rounded shadow" alt="Interior toko" style="object-fit: cover; height: 100%; max-height: 400px; width: 100%;">
+            </div>
+            <div class="col-md-6 order-md-2">
+                <p class="text-muted">
+                    Dari sebuah toko kecil di Tangerang, kini Franada Parfum terus berinovasi dan berkembang melalui kehadiran kami secara online. Visi kami sederhana: menjadi pilihan utama masyarakat Indonesia dalam mencari parfum favorit mereka.
+                </p>
+                <p>Kami percaya bahwa parfum bukan sekadar wewangian, tapi juga bagian dari identitas, suasana hati, dan cara seseorang mengekspresikan diri. Karena itu, setiap produk yang kami hadirkan selalu dipilih dan diracik dengan penuh perhatian terhadap kualitas, ketahanan aroma, dan kepuasan pelanggan.
+</p>
+            </div>
         </div>
-    </section> --}}
+    </div>
+</section>
+
+
+
 
     {{-- Vision & Mission --}}
     <section class="py-5 bg-light">
@@ -75,12 +73,12 @@
             <p class="text-muted mb-5">Di balik kesuksesan Franada Parfum adalah tim profesional pecinta parfum yang berdedikasi tinggi.</p>
             <div class="row g-4 justify-content-center">
                 @foreach([
-                    ['name' => 'Fandi Fadillah', 'role' => 'Founder & CEO', 'img' => 'ceo.jpg'],
-                    ['name' => 'Miftahudin ALdi Saputra', 'role' => 'Backend', 'img' => 'miftah.jpg'],
-                    ['name' => 'Dwi Bayu Nugraha', 'role' => 'Project Manager', 'img' => 'dwi.jpg'],
-                    ['name' => 'M Juan Adi Pratama', 'role' => 'UI/UX Desainer', 'img' => 'juan.jpg'],
-                    ['name' => 'Rodiyansyah Ramadan', 'role' => 'IT Consultant', 'img' => 'rodiramadan.jpg'],
-                    ['name' => 'Agung Rizki Saputra', 'role' => 'Frontend', 'img' => 'saya.jpg'],
+                    ['name' => '-', 'role' => 'Founder & CEO', 'img' => 'ceo.jpg'],
+                    ['name' => '-', 'role' => 'Brand & Product Designer', 'img' => 'miftah.jpg'],
+                    ['name' => '-', 'role' => 'Marketer', 'img' => 'dwi.jpg'],
+                    ['name' => '-', 'role' => 'Costumer Service', 'img' => 'juan.jpg'],
+                    ['name' => '-', 'role' => 'Content Creator', 'img' => 'rodiramadan.jpg'],
+                    ['name' => '-', 'role' => 'Parfum Specialist', 'img' => 'saya.jpg'],
                 ] as $member)
                 <div class="col-6 col-md-4 col-lg-3">
                     <div class="card border-0 shadow-sm h-100">
